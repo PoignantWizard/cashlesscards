@@ -5,16 +5,7 @@
   <h3>{{ customer.first_name }} {{ customer.surname }}'s account details</h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-full">
-            {% if user.is_authenticated %}
-              <p>Eligible for free meals: 
-                {% if customer.free_meals == 1 %}
-                  Yes</p>
-                  <p>Free meal voucher value: {{ customer.cash.voucher_value }}
-                {% elif customer.free_meals == 0 %}
-                  No
-                {% endif %}
-              </p>
-            {% endif %}
+            <p>Voucher value: {{ customer.cash.voucher_value }}</p>
             <p>Cash balance: {{ customer.cash.cash_value }} </p>
             <br />
             <p>

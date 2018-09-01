@@ -141,7 +141,7 @@ class TransactionModelTest(TestCase):
         max_digits = balance._meta.get_field('voucher_value').max_digits
         self.assertEqual(max_digits, 14)
 
-    def test_free_meals_status(self):
+    def test_transaction_status(self):
         """The transaction type is credit or debit"""
         balance = Transaction.objects.get(id=1)
         transact_choices = ['credit', 'debit']

@@ -14,7 +14,7 @@ from djmoney.money import Money
 from . import customsettings
 from .models import Customer, Cash, Transaction
 from .forms import AddCashForm, DeductCashForm
-from .voucherhandler import daily_fsm, debit_voucher
+from .voucherhandler import apply_voucher, debit_voucher
 
 
 def index(request):
@@ -52,7 +52,7 @@ def search(request):
         results = None
     if query:
         results = Customer.objects.get(card_number=query)
-        daily_fsm(results)
+        apply_voucher(results)
     return render(request, 'cashless/results.html', {"results": results,})
 
 
@@ -65,6 +65,7 @@ class CustomerDetailView(generic.DetailView):
 def add_cash_cashier(request, pk):
     """View function for adding cash to a specific customer's account by cashier"""
     cash_inst = get_object_or_404(Cash, customer_id=pk)
+    cash_inst.total = cash_inst.cash_value + cash_inst.voucher_value
 
     # if this is a POST request then process the Form data
     if request.method == 'POST':
@@ -169,4 +170,4 @@ class ActivityLog(PermissionRequiredMixin, generic.ListView):
     def get_queryset(self):
         """Filter log down to records from just this year"""
         now = datetime.datetime.now()
-        return Transaction.objects.filter(transaction_time__year=now.year)
+        return Transaction.objects.filter(transaction_time__month=now.month)

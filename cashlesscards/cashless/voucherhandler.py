@@ -1,30 +1,47 @@
 import datetime
+import time
 from djmoney.money import Money
 
 from . import customsettings
-from .models import Cash, FreeMealValue, Transaction
+from .models import VoucherLink, Voucher, Transaction
 
 
-def daily_fsm(customer):
-    """Updates the voucher value if today is a new day"""
-    fsm = 1
-    voucher = FreeMealValue.objects.get(pk=fsm)
-    cash_inst = Cash.objects.get(customer_id=customer.pk)
+def apply_voucher(customer):
+    """Updates the voucher value if haven't already this time period"""
+    # get associated records
+    voucher_list = VoucherLink.objects.filter(customer_id=customer.pk)
+    cash_inst = customer.cash
+    today = datetime.date.today()
 
-    # if customer eligible for free meals and voucher hasn't been updated today
-    if customer.free_meals == fsm and cash_inst.voucher_date != datetime.date.today():
-        # update cash balance
-        cash_inst.voucher_value += voucher.meal_value
-        cash_inst.voucher_date = datetime.date.today()
-        cash_inst.save()
+    # loop through customer's vouchers
+    for v in voucher_list:
+        v_inst = Voucher.objects.get(pk=v.voucher_id)
 
-        # update transaction log
-        transact = Transaction(
-            customer_id=customer.pk,
-            transaction_type="credit",
-            voucher_value=voucher.meal_value,
-        )
-        transact.save()
+        # utility values
+        lw = time.strptime(str(v.last_applied), "%Y-%m-%d")
+        tw = time.strptime(str(today), "%Y-%m-%d")
+        last_week = time.strftime("%W", lw)
+        today_week = time.strftime("%W", tw)
+
+        # check it's appropriate to apply voucher to customer's account
+        if (v_inst.voucher_application == "daily" and v.last_applied != today) \
+            or (v_inst.voucher_application == "weekly" and last_week != today_week) \
+            or (v_inst.voucher_application == "monthly" and v.last_applied.month != today.month) \
+            or (v_inst.voucher_application == "yearly" and v.last_applied.year != today.year):
+
+            # update cash balance
+            cash_inst.voucher_value += v_inst.voucher_value
+            cash_inst.save()
+            v.last_applied = today
+            v.save()
+
+            # update transaction log
+            transact = Transaction(
+                customer_id=customer.pk,
+                transaction_type="credit",
+                voucher_value=v_inst.voucher_value,
+            )
+            transact.save()
 
 
 def debit_voucher(cash, value):

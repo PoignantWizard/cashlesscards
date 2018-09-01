@@ -7,19 +7,7 @@
      <h3>{{ results.first_name }} {{ results.surname }}'s account details</h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-full">
-          <!-- <p>ID card number: {{ results.card_number }}</p> -->
-          {% if user.is_authenticated %}
-            <p>Eligible for free meals: 
-              {% if results.free_meals == 1 %}
-                Yes</p>
-                <p>Free meal voucher value: {{ results.cash.voucher_value }}
-              {% elif results.free_meals == 0 %}
-                No
-              {% else %}
-                Unknown
-              {% endif %}
-            </p>
-          {% endif %}
+          <p>Voucher value: {{ results.cash.voucher_value }}</p>
           <p>Cash balance: {{ results.cash.cash_value }} </p>
           <br />
           <p>

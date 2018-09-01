@@ -8,9 +8,23 @@ from djmoney.models.fields import MoneyField
 from . import customsettings
 
 
-class FreeMealValue(models.Model):
-    """Lookup table to define the value of free meals vouchers"""
-    meal_value = MoneyField(
+class Voucher(models.Model):
+    """Lookup table to define available vouchers and their values"""
+    TIMING = (
+        ("daily", "Daily"),
+        ("weekly", "Weekly"),
+        ("monthly", "Monthly"),
+        ("yearly", "Yearly"),
+    )
+
+    voucher_application = models.CharField(
+        max_length=255,
+        choices=TIMING,
+        default="daily",
+        help_text="Select how often the voucher is applied to the customer's account"
+    )
+    voucher_name = models.CharField(max_length=255)
+    voucher_value = MoneyField(
         max_digits=14,
         decimal_places=2,
         default_currency=customsettings.CURRENCY,
@@ -19,32 +33,21 @@ class FreeMealValue(models.Model):
 
     def __str__(self):
         """String for representing the Model object"""
-        return "Free meal voucher value: " + str(self.meal_value)
+        return self.voucher_name + ": " + str(self.voucher_value)
 
 
 class Customer(models.Model):
-    """The user details table"""
+    """The customer details table"""
     card_number = models.IntegerField()
     first_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-
-    FREE_STATUS = (
-        (0, "Not eligible"),
-        (1, "Eligible"),
-    )
-
-    free_meals = models.IntegerField(
-        choices=FREE_STATUS,
-        default=0,
-        help_text="Select whether customer is eligible for free meals"
-    )
 
     class Meta:
         """Declare model-level metadata to control default ordering of records and set plural"""
         ordering = ["surname", "first_name"]
         verbose_name_plural = "customers"
         permissions = (
-            ("can_set_free_meals", "Set free meal eligibility"),
+            ("can_add_voucher", "Add vouchers to a customer"),
         )
 
     def __str__(self):
@@ -75,7 +78,6 @@ class Cash(models.Model):
         default_currency=customsettings.CURRENCY,
         default=0,
     )
-    voucher_date = models.DateField(default=datetime.date.today)
 
     class Meta:
         """Declare model-level metadata to set plural"""
@@ -87,6 +89,16 @@ class Cash(models.Model):
     def __str__(self):
         """String for representing the Model object"""
         return "Customer's available cash: " + str(self.cash_value + self.voucher_value)
+
+
+class VoucherLink(models.Model):
+    """Lists each customer's vouchers and when they were last applied"""
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE)
+
+    yesterday = (datetime.date.today() - datetime.timedelta(1))
+
+    last_applied = models.DateField(default=yesterday)
 
 
 class Transaction(models.Model):
@@ -126,9 +138,3 @@ class Transaction(models.Model):
         permissions = (
             ("view_finance", "Can view transaction log"),
         )
-
-    #def __str__(self):
-    #    """String for representing the Model object"""
-    #    return Customer.first_name + " " + Customer.surname + " was " + transaction_type + "ed " \
-    #        + str(self.transaction_value + self.voucher_value) \
-    #        + " on " + str(self.transaction_time)

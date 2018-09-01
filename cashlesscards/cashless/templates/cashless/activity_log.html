@@ -37,7 +37,7 @@
             <th>Time</th>
             <th>Type</th>
             <th>Cash value</th>
-            <th>Free meal voucher value</th>
+            <th>Voucher value</th>
         </tr>
 
         {% for item in transaction_log %}
@@ -52,7 +52,7 @@
     </table>
 
 {% else %}
-  <p>There have been no transactions today.</p>
+  <p>There have been no transactions this month.</p>
 {% endif %}   
 
 {% endblock %}

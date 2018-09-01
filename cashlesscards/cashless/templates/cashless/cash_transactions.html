@@ -3,9 +3,9 @@
 
     <h1>Customer: {{cashinst.customer.first_name}} {{cashinst.customer.surname}}</h1>
     {% if too_much %}<p><strong>You don't have enough cash in your account for that! Try again.</strong></p>{% endif %}
-    {% if cashinst.customer.free_meals == 1 %}<p>Free meal voucher value: {{ cashinst.voucher_value }}{% endif %}
+    <p>Voucher value: {{ cashinst.voucher_value }}
     <p>Current cash held on system: {{cashinst.cash_value}}</p>
-    {% if cashinst.customer.free_meals == 1 %}<p>Total balance: {{ cashinst.total }}</p>{% endif %}
+    <p>Total balance: {{ cashinst.total }}</p>
     
     <form action="" method="post">
         {% csrf_token %}

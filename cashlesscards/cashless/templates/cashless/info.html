@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+{% block content %}
+
+ <h2>Information</h2>
+ <p>Welcome to CashlessCards, a website developed by <em>PoignantWizard</em>!</p>
+  <p>The system has the following data:</p>
+  <ul>
+    <li><strong>Customers:</strong> {{ num_customers }}</li>
+    <li><strong>Customer with cash accounts:</strong> {{ num_cash }}</li>
+    <li><strong>Total cash held by system:</strong> £{{ sum_cash }}</li>
+  </ul>
+
+{% endblock %}

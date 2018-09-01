@@ -1,0 +1,56 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+{% if results %}
+
+     <h3>{{ results.first_name }} {{ results.surname }}'s account details</h3>
+      <div class="w3-row-padding" style="margin:0 -16px;">
+        <div class="w3-full">
+          <!-- <p>ID card number: {{ results.card_number }}</p> -->
+          {% if user.is_authenticated %}
+            <p>Eligible for free meals: 
+              {% if results.free_meals == 1 %}
+                Yes</p>
+                <p>Free meal voucher value: {{ results.cash.voucher_value }}
+              {% elif results.free_meals == 0 %}
+                No
+              {% else %}
+                Unknown
+              {% endif %}
+            </p>
+          {% endif %}
+          <p>Cash balance: {{ results.cash.cash_value }} </p>
+          <br />
+          <p>
+            {% if perms.cashless.can_transact %}
+              <a href="{% url 'add_cash_cashier' results.pk %}">
+                <button class="w3-button w3-dark-grey" target="_blank">Add cash to account</button>
+              </a>
+              <a href="{% url 'deduct_cash_cashier' results.pk %}">
+                <button class="w3-button w3-dark-grey" target="_blank">Deduct cash from account</button>
+              </a>
+            {% endif %} 
+            <a href="/"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a>
+          </p>
+        </div>
+      </div>
+
+{% else %}
+      <!-- Search box -->
+      <div id="cardsearch" class="w3-container w3-white w3-padding-16 myLink">
+        <h3 class='error'>Please enter a valid card number</h3>
+        <div class="w3-row-padding" style="margin:0 -16px;">
+          <div class="w3-full">
+            <label>ID card number</label>
+            <form method="get" action="/cashless/search/">
+              <input class="w3-input w3-border" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
+              <p><input class="w3-button w3-dark-grey" type="submit" value="Search and find cash balance" /></p>
+            </form>
+          </div>
+          </div>
+          </div>
+
+{% endif %}
+
+{% endblock %}

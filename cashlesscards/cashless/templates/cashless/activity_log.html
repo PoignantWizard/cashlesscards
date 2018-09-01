@@ -1,0 +1,58 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    td, th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    
+    tr:nth-child(even){background-color: #f2f2f2;}
+    
+    tr:hover {
+        background-color: #cc0000;
+        color: white;
+    }
+    
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #cc0000;
+        color: white;
+    }
+</style>
+
+<h1>Transaction log</h1>
+{% if transaction_log %}
+    <table>
+        <tr>
+            <th>Customer</th>
+            <th>Time</th>
+            <th>Type</th>
+            <th>Cash value</th>
+            <th>Free meal voucher value</th>
+        </tr>
+
+        {% for item in transaction_log %}
+        <tr> 
+            <td>{{ item.customer.surname }}, {{ item.customer.first_name }}</td>
+            <td>{{ item.transaction_time }}</td>
+            <td>{{ item.transaction_type }}</td>
+            <td>{{ item.transaction_value }}</td>
+            <td>{{ item.voucher_value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% else %}
+  <p>There have been no transactions today.</p>
+{% endif %}   
+
+{% endblock %}

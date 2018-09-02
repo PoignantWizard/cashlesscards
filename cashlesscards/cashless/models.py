@@ -96,9 +96,9 @@ class VoucherLink(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE)
 
-    yesterday = (datetime.date.today() - datetime.timedelta(1))
+    last_year = datetime.datetime.now() - datetime.timedelta(days=365)
 
-    last_applied = models.DateField(default=yesterday)
+    last_applied = models.DateField(default=last_year)
 
 
 class Transaction(models.Model):

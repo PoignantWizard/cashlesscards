@@ -4,34 +4,60 @@ from django.utils.timezone import now
 from djmoney.money import Money
 
 from cashless import customsettings
-from cashless.models import FreeMealValue, Customer, Cash, Transaction
+from cashless.models import Voucher, Customer, Cash, VoucherLink, Transaction
 
 
-class FreeMealValueModelTest(TestCase):
-    """Tests the FreeMealsValue model"""
+class VoucherModelTest(TestCase):
+    """Tests the Voucher model"""
     @classmethod
     def setUpTestData(cls):
         """Set up non-modified objects used by all test methods"""
-        FreeMealValue.objects.create(
-            meal_value=Money(2, customsettings.CURRENCY),
+        Voucher.objects.create(
+            voucher_application="daily",
+            voucher_name="Free breakfast",
+            voucher_value=Money(2, customsettings.CURRENCY),
         )
 
-    def test_meal_value_label(self):
-        """The verbose name of the meal value field is as expected"""
-        voucher = FreeMealValue.objects.get(id=1)
-        field_label = voucher._meta.get_field('meal_value').verbose_name
-        self.assertEqual(field_label, 'meal value')
+    def test_voucher_application_label(self):
+        """The verbose name of the voucher application field is as expected"""
+        voucher = Voucher.objects.get(id=1)
+        field_label = voucher._meta.get_field('voucher_application').verbose_name
+        self.assertEqual(field_label, 'voucher application')
 
-    def test_meal_value_max_digits(self):
+    def test_voucher_application_max_length(self):
+        """The maximum length of the voucher application is as expected"""
+        voucher = Voucher.objects.get(id=1)
+        max_length = voucher._meta.get_field('voucher_application').max_length
+        self.assertEqual(max_length, 255)
+
+    def test_voucher_name_label(self):
+        """The verbose name of the voucher name field is as expected"""
+        voucher = Voucher.objects.get(id=1)
+        field_label = voucher._meta.get_field('voucher_name').verbose_name
+        self.assertEqual(field_label, 'voucher name')
+
+    def test_voucher_name_max_length(self):
+        """The maximum length of the voucher name is as expected"""
+        voucher = Voucher.objects.get(id=1)
+        max_length = voucher._meta.get_field('voucher_name').max_length
+        self.assertEqual(max_length, 255)
+
+    def test_voucher_value_label(self):
+        """The verbose name of the voucher value field is as expected"""
+        voucher = Voucher.objects.get(id=1)
+        field_label = voucher._meta.get_field('voucher_value').verbose_name
+        self.assertEqual(field_label, 'voucher value')
+
+    def test_voucher_value_max_digits(self):
         """The maximum number of digits in the money value is as expected"""
-        voucher = FreeMealValue.objects.get(id=1)
-        max_digits = voucher._meta.get_field('meal_value').max_digits
+        voucher = Voucher.objects.get(id=1)
+        max_digits = voucher._meta.get_field('voucher_value').max_digits
         self.assertEqual(max_digits, 14)
 
     def test_object_name_is_voucher_value(self):
         """The string for representing the model object is as expected"""
-        voucher = FreeMealValue.objects.get(id=1)
-        expected_object_name = f'Free meal voucher value: {voucher.meal_value}'
+        voucher = Voucher.objects.get(id=1)
+        expected_object_name = f'{voucher.voucher_name}: {voucher.voucher_value}'
         self.assertEqual(expected_object_name, str(voucher))
 
 
@@ -44,7 +70,6 @@ class CustomerModelTest(TestCase):
             card_number=99,
             first_name='John',
             surname='Smith',
-            free_meals=0,
         )
 
     def test_first_name_max_length(self):
@@ -71,12 +96,6 @@ class CustomerModelTest(TestCase):
         # This will also fail if the urlconf is not defined.
         self.assertEqual(cust.get_absolute_url(), '/cashless/customer/1')
 
-    def test_free_meals_status(self):
-        """The free meal eligibility status is 1 or 0"""
-        cust = Customer.objects.get(id=1)
-        free_status = [0, 1]
-        self.assertIn(cust.free_meals, free_status)
-
 
 class CashModelTest(TestCase):
     """Tests the Cash model"""
@@ -87,7 +106,6 @@ class CashModelTest(TestCase):
             customer_id=1,
             cash_value=Money(2, customsettings.CURRENCY),
             voucher_value=Money(5, customsettings.CURRENCY),
-            voucher_date=datetime.date.today(),
         )
 
     def test_cash_value_max_digits(self):
@@ -109,11 +127,23 @@ class CashModelTest(TestCase):
         expected_object_name = f'Customer\'s available cash: {total_balance}'
         self.assertEqual(expected_object_name, str(balance))
 
-    def test_voucher_date(self):
-        """The voucher date is reset to today's date"""
-        balance = Cash.objects.get(id=1)
+
+class VoucherLinkModelTest(TestCase):
+    """Tests the VoucherLink model"""
+    @classmethod
+    def setUpTestData(cls):
+        """Set up non-modified objects used by all test methods"""
+        VoucherLink.objects.create(
+            customer_id=1,
+            voucher_id=1,
+            last_applied=datetime.date.today(),
+        )
+
+    def test_last_applied(self):
+        """The last applied date is reset to today's date"""
+        link = VoucherLink.objects.get(id=1)
         today = datetime.date.today()
-        self.assertEqual(today, balance.voucher_date)
+        self.assertEqual(today, link.last_applied)
 
 
 class TransactionModelTest(TestCase):

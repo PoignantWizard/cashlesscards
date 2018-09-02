@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from djmoney.money import Money
 
 from cashless import customsettings
-from cashless.models import FreeMealValue, Customer, Cash, Transaction
+from cashless.models import Voucher, Customer, Cash, Transaction
 
 
 class IndexTest(TestCase):
@@ -51,22 +51,22 @@ class SearchTest(TestCase):
     """Tests the search view"""
     def setUp(self):
         """Set up non-modified objects used by all test methods"""
-        test_free_meals = FreeMealValue.objects.create(
-            meal_value=Money(2, customsettings.CURRENCY),
+        test_voucher = Voucher.objects.create(
+            voucher_application="daily",
+            voucher_name="free breakfast",
+            voucher_value=Money(2, customsettings.CURRENCY),
         )
         test_customer = Customer.objects.create(
             card_number=99,
             first_name='John',
             surname='Smith',
-            free_meals=1,
         )
         test_cash = Cash.objects.create(
             customer_id=1,
             cash_value=Money(2, customsettings.CURRENCY),
             voucher_value=Money(5, customsettings.CURRENCY),
-            voucher_date=datetime.date.today(),
         )
-        test_free_meals.save()
+        test_voucher.save()
         test_customer.save()
         test_cash.save()
 
@@ -176,13 +176,11 @@ class AddCashCashierViewTest(TestCase):
             card_number=99,
             first_name='John',
             surname='Smith',
-            free_meals=0,
         )
         test_cash = Cash.objects.create(
             customer_id=1,
             cash_value=Money(2, customsettings.CURRENCY),
             voucher_value=Money(5, customsettings.CURRENCY),
-            voucher_date=datetime.date.today(),
         )
         test_customer.save()
         test_cash.save()
@@ -228,17 +226,6 @@ class AddCashCashierViewTest(TestCase):
             kwargs={'pk': test_customer.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'cashless/cash_transactions.html')
-
- #   def test_redirects_to_customer_detail_on_success(self):
- #       """The view redirects to the customer's detail page on successful form submission"""
- #       test_customer = Customer.objects.get(id=1)
- #       test_cash = Cash.objects.get(id=1)
- #       self.client.login(username='testuser1', password='1X<ISRUkw+tuK')
- #       test_value = Money(5, customsettings.CURRENCY)
- #       response = self.client.post(reverse('add_cash_cashier', \
- #           kwargs={'pk': test_customer.pk}), data={'cash_to_add': test_value}, follow=True)
- #       self.assertRedirects(response, reverse('customer_detail', \
- #           kwargs={'pk':test_cash.customer_id}))
 
 
 class DeductCashCashierViewTest(TestCase):
@@ -265,13 +252,11 @@ class DeductCashCashierViewTest(TestCase):
             card_number=99,
             first_name='John',
             surname='Smith',
-            free_meals=0,
         )
         test_cash = Cash.objects.create(
             customer_id=1,
             cash_value=Money(2, customsettings.CURRENCY),
             voucher_value=Money(5, customsettings.CURRENCY),
-            voucher_date=datetime.date.today(),
         )
         test_customer.save()
         test_cash.save()
@@ -317,14 +302,3 @@ class DeductCashCashierViewTest(TestCase):
             kwargs={'pk': test_customer.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'cashless/cash_transactions.html')
-
- #   def test_redirects_to_customer_detail_on_success(self):
- #       """The view redirects to the customer's detail page on successful form submission"""
- #       test_customer = Customer.objects.get(id=1)
- #       test_cash = Cash.objects.get(id=1)
- #       self.client.login(username='testuser1', password='1X<ISRUkw+tuK')
- #       test_value = Money(5, customsettings.CURRENCY)
- #       response = self.client.post(reverse('deduct_cash_cashier', \
- #           kwargs={'pk': test_customer.pk}), data={'cash_to_deduct': test_value}, follow=True)
- #       self.assertRedirects(response, reverse('customer_detail', \
- #           kwargs={'pk':test_cash.customer_id}))

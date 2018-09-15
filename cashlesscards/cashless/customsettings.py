@@ -8,3 +8,12 @@ VERSION = 1.0
 
 # default currency supplied to django-money module
 CURRENCY = 'GBP'
+
+
+# timing options for vouchers
+TIMING = (
+    ("daily", "Daily"),
+    ("weekly", "Weekly"),
+    ("monthly", "Monthly"),
+    ("yearly", "Yearly"),
+)

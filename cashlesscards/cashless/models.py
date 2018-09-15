@@ -10,16 +10,10 @@ from . import customsettings
 
 class Voucher(models.Model):
     """Lookup table to define available vouchers and their values"""
-    TIMING = (
-        ("daily", "Daily"),
-        ("weekly", "Weekly"),
-        ("monthly", "Monthly"),
-        ("yearly", "Yearly"),
-    )
 
     voucher_application = models.CharField(
         max_length=255,
-        choices=TIMING,
+        choices=customsettings.TIMING,
         default="daily",
         help_text="Select how often the voucher is applied to the customer's account"
     )
@@ -116,7 +110,7 @@ class VoucherLink(models.Model):
 
 class Transaction(models.Model):
     """The transaction log table"""
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     transaction_time = models.DateTimeField(default=now, blank=True)
 
     credit = "credit"

@@ -12,8 +12,8 @@ from django.urls import reverse
 from djmoney.money import Money
 
 from . import customsettings
-from .models import Customer, Cash, Transaction, VoucherLink
-from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm
+from .models import Customer, Cash, Transaction, VoucherLink, Voucher
+from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm, CreateNewVoucher
 from .voucherhandler import apply_voucher, debit_voucher
 
 
@@ -185,7 +185,7 @@ def add_voucher_link(request, pk):
     for link in link_inst:
         existing_vouchers.append(link.voucher_id)
 
-    # Initialize form
+    # initialize form
     form = AddVoucherLinkForm(request.POST, existing_vouchers=existing_vouchers)
 
     if request.method == "POST":
@@ -206,11 +206,70 @@ def add_voucher_link(request, pk):
                 reverse('customer_detail', kwargs={'pk':pk})
                 )
 
-    errors = form.errors or None # form not submitted or it has errors
+    # if this is a GET (or any other method) create the default form.
+    else:
+        proposed_voucher = 1
+        form = AddVoucherLinkForm(
+            initial={
+                'voucher': proposed_voucher,
+            },
+            existing_vouchers=existing_vouchers
+        )
 
     return render(request, 'cashless/assign_voucher.html', {
         'form':form,
-        'errors':errors,
         'custom_inst':custom_inst,
         'link_inst':link_inst,
+    })
+
+
+@permission_required('can_add_vouchers')
+def create_new_voucher(request):
+    """View function for creating a new voucher"""
+    vouch_inst = Voucher.objects.all()
+    # get voucher details
+    existing_vouchers = []
+    for vouch in vouch_inst:
+        existing_vouchers.append(vouch.voucher_name)
+
+    # initialize form
+    form = CreateNewVoucher(request.POST, existing_vouchers=existing_vouchers)
+
+    if request.method == "POST":
+        if form.is_valid():
+            # process the input
+            clean_application = form.cleaned_data['application']
+            clean_name = form.cleaned_data['name']
+            clean_value = form.cleaned_data['value']
+
+            # build new voucher ready for model
+            new_voucher = Voucher(
+                voucher_application=clean_application,
+                voucher_name=clean_name,
+                voucher_value=clean_value,
+            )
+            # write it to the model
+            new_voucher.save()
+
+            # redirect to a new URL
+            return HttpResponseRedirect(
+                reverse('index')
+            )
+
+    # if this is a GET (or any other method) create the default form.
+    else:
+        proposed_application = "daily"
+        proposed_name = ""
+        proposed_value = Money(5, customsettings.CURRENCY)
+        form = CreateNewVoucher(
+            initial={
+                'application': proposed_application,
+                'name': proposed_name,
+                'value': proposed_value,
+            },
+            existing_vouchers=existing_vouchers
+        )
+
+    return render(request, 'cashless/new_voucher.html', {
+        'form':form,
     })

@@ -25,6 +25,9 @@
         {% if perms.cashless.view_finance %}
           <a href="{% url 'activity_log' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red">Activity log</a>
         {% endif %}
+        {% if perms.can_add_vouchers %}
+          <a href="{% url 'create_new_voucher' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red">Create voucher</a>
+        {% endif %}
         <a href="{% url 'logout'%}?next=/" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey">Logout</a>
         <div class="w3-bar-item w3-right w3-text-grey">User: {{ user.get_username }}</div>
     {% else %}

@@ -67,6 +67,7 @@ class AddVoucherLinkForm(forms.Form):
         self.existing_vouchers = kwargs.pop('existing_vouchers')
         super(AddVoucherLinkForm, self).__init__(*args, **kwargs)
 
+
     voucher = forms.ModelChoiceField(
         queryset=Voucher.objects.all().order_by('voucher_name'),
         to_field_name="pk",
@@ -92,3 +93,73 @@ class AddVoucherLinkForm(forms.Form):
 
         # Return the cleaned data
         return data
+
+
+class CreateNewVoucher(forms.Form):
+    """Generates the form for creating a new voucher"""
+
+    def __init__(self, *args, **kwargs):
+        """Initializes the form to handle special arguments"""
+        self.existing_vouchers = kwargs.pop('existing_vouchers')
+        super(CreateNewVoucher, self).__init__(*args, **kwargs)
+
+
+    application = forms.ChoiceField(
+        choices=customsettings.TIMING,
+        help_text="Select how often the voucher is applied to the customer's account."
+    )
+    name = forms.CharField(
+        max_length=255,
+        help_text="Give the voucher a unique name."
+    )
+    value = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency=customsettings.CURRENCY,
+        help_text="Select the cash value for the voucher."
+    )
+
+    def clean_voucher_application(self):
+        """cleans up user data before creating voucher"""
+        v_application = self.cleaned_data['application']
+
+        # Check that a voucher application period has been selected
+        if not v_application:
+            raise ValidationError(ugettext_lazy('Invalid value - no application period selected'))
+
+        # Return the cleaned data
+        return v_application
+
+
+    def clean_voucher_name(self):
+        """cleans up user data before creating voucher"""
+        v_name = self.cleaned_data['name']
+
+        # Check that a voucher name has been selected
+        if not v_name:
+            raise ValidationError(ugettext_lazy('Invalid value - no voucher name entered'))
+
+        # Check if a voucher already exists
+        if v_name in self.existing_vouchers:
+            raise ValidationError(ugettext_lazy(
+                'Invalid value - voucher already exists'
+            ))
+
+        # Return the cleaned data
+        return v_name
+
+
+    def clean_voucher_value(self):
+        """cleans up user data before creating voucher"""
+        v_value = self.cleaned_data['value']
+
+        # Check value is not negative
+        if v_value < Money(0, customsettings.CURRENCY):
+            raise ValidationError(ugettext_lazy('Invalid value - cash value is negative'))
+
+        # Check value is not zero
+        if v_value == Money(0, customsettings.CURRENCY):
+            raise ValidationError(ugettext_lazy('Invalid value - cash value is zero'))
+
+        # Return the cleaned data
+        return v_value

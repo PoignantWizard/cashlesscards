@@ -11,4 +11,5 @@ urlpatterns = [
     path('customer/<int:pk>/deductcash/', views.deduct_cash_cashier, name='deduct_cash_cashier'),
     path('log', views.ActivityLog.as_view(), name='activity_log'),
     path('customer/<int:pk>/assignvoucher/', views.add_voucher_link, name='add_voucher_link'),
+    path('newvoucher/', views.create_new_voucher, name='create_new_voucher'),
 ]

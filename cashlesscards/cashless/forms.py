@@ -5,6 +5,7 @@ from djmoney.forms.fields import MoneyField
 from djmoney.money import Money
 
 from . import customsettings
+from .models import Voucher
 
 
 class AddCashForm(forms.Form):
@@ -53,6 +54,41 @@ class DeductCashForm(forms.Form):
         # Check value is not zero
         if data == Money(0, customsettings.CURRENCY):
             raise ValidationError(ugettext_lazy('Invalid value - cash value is zero'))
+
+        # Return the cleaned data
+        return data
+
+
+class AddVoucherLinkForm(forms.Form):
+    """Generates the form for adding a voucher to a customer's record"""
+
+    def __init__(self, *args, **kwargs):
+        """Initializes the form to handle special arguments"""
+        self.existing_vouchers = kwargs.pop('existing_vouchers')
+        super(AddVoucherLinkForm, self).__init__(*args, **kwargs)
+
+    voucher = forms.ModelChoiceField(
+        queryset=Voucher.objects.all().order_by('voucher_name'),
+        to_field_name="pk",
+        help_text="Select a voucher to assign to this customer."
+    )
+
+    def clean_voucher(self):
+        """cleans up user data before assigning voucher"""
+        data = self.cleaned_data['voucher']
+
+        # Check that a voucher has been selected
+        if not data:
+            raise ValidationError(ugettext_lazy('Invalid value - no voucher selected'))
+
+        # Extract the voucher primary key
+        data = data.pk
+
+        # Check if a voucher is already assigned
+        if data in self.existing_vouchers:
+            raise ValidationError(ugettext_lazy(
+                'Invalid value - voucher already assigned to customer'
+            ))
 
         # Return the cleaned data
         return data

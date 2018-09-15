@@ -1,11 +1,13 @@
 {% extends "base_generic.html" %}
 {% block content %}
 
-    <h1>Customer: {{cashinst.customer.first_name}} {{cashinst.customer.surname}}</h1>
-    {% if too_much %}<p><strong>You don't have enough cash in your account for that! Try again.</strong></p>{% endif %}
-    <p>Voucher value: {{ cashinst.voucher_value }}
-    <p>Current cash held on system: {{cashinst.cash_value}}</p>
-    <p>Total balance: {{ cashinst.total }}</p>
+    <h1>Customer: {{custom_inst.first_name}} {{custom_inst.surname}}</h1>
+        <p>Current vouchers:</p>
+            <ul>
+            {% for link in link_inst %}
+                <li>{{ link.voucher.voucher_name }}: {{ link.voucher.voucher_value }}</li>
+            {% endfor %}
+            </ul>
     
     <form action="" method="post">
         {% csrf_token %}
@@ -15,5 +17,6 @@
         <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
     </form>
         <p><a href="{% url 'index' %}"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a></p>
+
 
 {% endblock %}

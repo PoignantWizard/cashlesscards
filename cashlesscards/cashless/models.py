@@ -31,6 +31,13 @@ class Voucher(models.Model):
         default=0
     )
 
+    class Meta:
+        """Declare model-level metadata"""
+        ordering = ["voucher_name"]
+        permissions = (
+            ("can_add_vouchers", "Create a new voucher"),
+        )
+
     def __str__(self):
         """String for representing the Model object"""
         return self.voucher_name + ": " + str(self.voucher_value)
@@ -99,6 +106,12 @@ class VoucherLink(models.Model):
     last_year = datetime.datetime.now() - datetime.timedelta(days=365)
 
     last_applied = models.DateField(default=last_year)
+
+    class Meta:
+        """Declare model-level metadata"""
+        permissions = (
+            ("can_assign_voucher", "Assign vouchers to customers"),
+        )
 
 
 class Transaction(models.Model):

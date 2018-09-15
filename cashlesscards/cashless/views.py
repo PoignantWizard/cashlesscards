@@ -12,8 +12,8 @@ from django.urls import reverse
 from djmoney.money import Money
 
 from . import customsettings
-from .models import Customer, Cash, Transaction
-from .forms import AddCashForm, DeductCashForm
+from .models import Customer, Cash, Transaction, VoucherLink
+from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm
 from .voucherhandler import apply_voucher, debit_voucher
 
 
@@ -33,6 +33,7 @@ def info(request):
     sum_cash = Cash.objects.aggregate(Sum('cash_value'))['cash_value__sum']
 
     context = {
+        'version': customsettings.VERSION,
         'num_customers': num_customers,
         'num_cash': num_cash,
         'sum_cash': sum_cash,
@@ -164,6 +165,7 @@ class ActivityLog(PermissionRequiredMixin, generic.ListView):
     """Transaction log using the generic list view"""
     permission_required = 'cashless.view_finance'
     model = Transaction
+    paginate_by = 20
     context_object_name = 'transaction_log'
     template_name = 'cashless/activity_log.html'
 
@@ -171,3 +173,44 @@ class ActivityLog(PermissionRequiredMixin, generic.ListView):
         """Filter log down to records from just this year"""
         now = datetime.datetime.now()
         return Transaction.objects.filter(transaction_time__month=now.month)
+
+
+@permission_required('can_assign_voucher')
+def add_voucher_link(request, pk):
+    """View function for assigning a voucher to a specific customer's account"""
+    link_inst = VoucherLink.objects.filter(customer_id=pk)
+    custom_inst = Customer.objects.get(pk=pk)
+    # get voucher details
+    existing_vouchers = []
+    for link in link_inst:
+        existing_vouchers.append(link.voucher_id)
+
+    # Initialize form
+    form = AddVoucherLinkForm(request.POST, existing_vouchers=existing_vouchers)
+
+    if request.method == "POST":
+        if form.is_valid():
+            # process the input
+            clean_data = form.cleaned_data['voucher']
+
+            # assign voucher to customer's account
+            new_voucher = VoucherLink(
+                customer_id=int(pk),
+                voucher_id=int(clean_data),
+            )
+            # write it to the model
+            new_voucher.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect(
+                reverse('customer_detail', kwargs={'pk':pk})
+                )
+
+    errors = form.errors or None # form not submitted or it has errors
+
+    return render(request, 'cashless/assign_voucher.html', {
+        'form':form,
+        'errors':errors,
+        'custom_inst':custom_inst,
+        'link_inst':link_inst,
+    })

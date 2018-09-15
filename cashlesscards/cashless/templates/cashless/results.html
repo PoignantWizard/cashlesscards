@@ -19,6 +19,11 @@
                 <button class="w3-button w3-dark-grey" target="_blank">Deduct cash from account</button>
               </a>
             {% endif %} 
+            {% if perms.can_assign_voucher %}
+              <a href="{% url 'add_voucher_link' results.pk %}">
+                <button class="w3-button w3-dark-grey" target="_blank">Assign voucher</button>
+              </a>
+            {% endif %}
             <a href="/"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a>
           </p>
         </div>

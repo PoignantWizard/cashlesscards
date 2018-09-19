@@ -3,13 +3,15 @@
 
     <h1>Create a new voucher</h1>
     
-    <form action="" method="post">
-        {% csrf_token %}
-        <table>
-        {{ form }}
-        </table>
-        <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
-    </form>
+    <div class="w3-responsive">
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+            {{ form }}
+            </table>
+            <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
+        </form>
+    </div>
 
 
 {% endblock %}

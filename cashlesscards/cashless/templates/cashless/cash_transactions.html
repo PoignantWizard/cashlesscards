@@ -7,13 +7,15 @@
     <p>Current cash held on system: {{cashinst.cash_value}}</p>
     <p>Total balance: {{ cashinst.total }}</p>
     
-    <form action="" method="post">
-        {% csrf_token %}
-        <table>
-        {{ form }}
-        </table>
-        <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
-    </form>
+    <div class="w3-responsive">
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+            {{ form }}
+            </table>
+            <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
+        </form>
+    </div>
         <p><a href="{% url 'index' %}"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a></p>
 
 {% endblock %}

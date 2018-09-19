@@ -4,6 +4,7 @@
 
 <h1>Transaction log</h1>
 {% if transaction_log %}
+<div class="w3-responsive">
     <table>
         <tr>
             <th>Customer</th>
@@ -23,6 +24,7 @@
         </tr>
         {% endfor %}
     </table>
+</div>
 
 {% else %}
   <p>There have been no transactions this month.</p>

@@ -13,7 +13,7 @@ from djmoney.money import Money
 
 from . import customsettings
 from .models import Customer, Cash, Transaction, VoucherLink, Voucher
-from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm, CreateNewVoucher
+from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm, CreateNewVoucherForm
 from .voucherhandler import apply_voucher, debit_voucher
 
 
@@ -233,7 +233,7 @@ def create_new_voucher(request):
         existing_vouchers.append(vouch.voucher_name)
 
     # initialize form
-    form = CreateNewVoucher(request.POST, existing_vouchers=existing_vouchers)
+    form = CreateNewVoucherForm(request.POST, existing_vouchers=existing_vouchers)
 
     if request.method == "POST":
         if form.is_valid():
@@ -261,7 +261,7 @@ def create_new_voucher(request):
         proposed_application = "daily"
         proposed_name = ""
         proposed_value = Money(5, customsettings.CURRENCY)
-        form = CreateNewVoucher(
+        form = CreateNewVoucherForm(
             initial={
                 'application': proposed_application,
                 'name': proposed_name,

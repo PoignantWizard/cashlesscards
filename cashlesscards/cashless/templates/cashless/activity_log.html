@@ -2,33 +2,6 @@
 
 {% block content %}
 
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    
-    td, th {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-    
-    tr:nth-child(even){background-color: #f2f2f2;}
-    
-    tr:hover {
-        background-color: #cc0000;
-        color: white;
-    }
-    
-    th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #cc0000;
-        color: white;
-    }
-</style>
-
 <h1>Transaction log</h1>
 {% if transaction_log %}
     <table>

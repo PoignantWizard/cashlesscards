@@ -95,14 +95,13 @@ class AddVoucherLinkForm(forms.Form):
         return data
 
 
-class CreateNewVoucher(forms.Form):
+class CreateNewVoucherForm(forms.Form):
     """Generates the form for creating a new voucher"""
 
     def __init__(self, *args, **kwargs):
         """Initializes the form to handle special arguments"""
         self.existing_vouchers = kwargs.pop('existing_vouchers')
-        super(CreateNewVoucher, self).__init__(*args, **kwargs)
-
+        super(CreateNewVoucherForm, self).__init__(*args, **kwargs)
 
     application = forms.ChoiceField(
         choices=customsettings.TIMING,
@@ -130,7 +129,6 @@ class CreateNewVoucher(forms.Form):
         # Return the cleaned data
         return v_application
 
-
     def clean_voucher_name(self):
         """cleans up user data before creating voucher"""
         v_name = self.cleaned_data['name']
@@ -147,7 +145,6 @@ class CreateNewVoucher(forms.Form):
 
         # Return the cleaned data
         return v_name
-
 
     def clean_voucher_value(self):
         """cleans up user data before creating voucher"""

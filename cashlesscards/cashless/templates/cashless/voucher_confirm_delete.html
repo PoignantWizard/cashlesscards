@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Delete voucher</h1>
+
+<p>Are you sure you want to delete the voucher: {{ voucher }}?</p>
+
+<div class="w3-responsive">
+    <form action="" method="POST">
+    {% csrf_token %}
+    <p><input class="w3-button w3-dark-grey" type="submit" value="Yes, delete." /></p>
+    </form>
+</div>
+<p><a href="{% url 'voucher_list' %}"><button class="w3-button w3-dark-grey" target="_blank">Find another voucher</button></a></p>
+
+{% endblock %}

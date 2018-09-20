@@ -29,7 +29,7 @@ class Voucher(models.Model):
         """Declare model-level metadata"""
         ordering = ["voucher_name"]
         permissions = (
-            ("can_add_vouchers", "Create a new voucher"),
+            ("can_add_vouchers", "Create and edit vouchers"),
         )
 
     def __str__(self):
@@ -47,9 +47,6 @@ class Customer(models.Model):
         """Declare model-level metadata to control default ordering of records and set plural"""
         ordering = ["surname", "first_name"]
         verbose_name_plural = "customers"
-        permissions = (
-            ("can_add_voucher", "Add vouchers to a customer"),
-        )
 
     def __str__(self):
         """String for representing the Model object"""

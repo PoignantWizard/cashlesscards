@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="w3-responsive">
+  <form action="" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
+  </form>
+</div>
+<p><a href="{% url 'voucher_list' %}"><button class="w3-button w3-dark-grey" target="_blank">Find another voucher</button></a></p>
+
+{% endblock %}

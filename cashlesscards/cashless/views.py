@@ -6,9 +6,10 @@ from django.views import generic
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from djmoney.money import Money
 
 from . import customsettings
@@ -253,7 +254,7 @@ def create_new_voucher(request):
 
             # redirect to a new URL
             return HttpResponseRedirect(
-                reverse('index')
+                reverse('voucher_detail')
             )
 
     # if this is a GET (or any other method) create the default form.
@@ -273,3 +274,41 @@ def create_new_voucher(request):
     return render(request, 'cashless/new_voucher.html', {
         'form':form,
     })
+
+
+class VoucherListView(PermissionRequiredMixin, generic.ListView):
+    """A list of all vouchers using the generic list view"""
+    permission_required = 'cashless.can_add_vouchers'
+    model = Voucher
+    paginate_by = 20
+
+
+class VoucherDetailView(PermissionRequiredMixin, generic.DetailView):
+    """Voucher detail using the generic detail view"""
+    permission_required = 'cashless.can_add_vouchers'
+    model = Voucher
+
+
+class VoucherUpdate(PermissionRequiredMixin, UpdateView):
+    """Voucher update form using the generic view"""
+    permission_required = 'cashless.can_add_vouchers'
+    model = Voucher
+    fields = [
+        'voucher_application',
+        'voucher_name',
+        'voucher_value'
+    ]
+    template_name_suffix = '_handler'
+
+
+class VoucherDelete(PermissionRequiredMixin, DeleteView):
+    """Voucher delete form using the generic view"""
+    permission_required = 'cashless.can_add_vouchers'
+    model = Voucher
+    success_url = reverse_lazy('voucher_list')
+
+
+#class AuthorCreate(CreateView):
+#    model = Author
+#    fields = '__all__'
+#    initial = {'date_of_death': '05/01/2018'}

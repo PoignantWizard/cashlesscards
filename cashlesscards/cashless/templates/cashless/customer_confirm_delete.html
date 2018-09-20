@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Delete customer account</h1>
+
+{% if customer.cash.cash_value == 0 %}
+    <p>Are you sure you want to delete the customer: {{ customer }}?</p>
+
+    <div class="w3-responsive">
+        <form action="" method="POST">
+        {% csrf_token %}
+            <p><input class="w3-button w3-dark-grey" type="submit" value="Yes, delete." /></p>
+        </form>
+    </div>
+{% else %}
+    <p>{{ customer }} still has {{ customer.cash.cash_value }} in their account! You need to get them to spend it, or refund it, before you can delete their account.</p>
+{% endif %}
+
+<p><a href="{% url 'customer_list' %}"><button class="w3-button w3-dark-grey" target="_blank">Find another customer</button></a></p>
+
+{% endblock %}

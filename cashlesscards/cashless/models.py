@@ -47,6 +47,9 @@ class Customer(models.Model):
         """Declare model-level metadata to control default ordering of records and set plural"""
         ordering = ["surname", "first_name"]
         verbose_name_plural = "customers"
+        permissions = (
+            ("can_add_customers", "Create and edit customer accounts"),
+        )
 
     def __str__(self):
         """String for representing the Model object"""

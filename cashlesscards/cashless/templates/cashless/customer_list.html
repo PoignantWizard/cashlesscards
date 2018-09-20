@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Customers</h1>
+{% if customer_list %}
+<div class="w3-responsive">
+    <table>
+        <tr>
+            <th>Card number</th>
+            <th>Name</th>
+            <th>Cash balance</th>
+            <th>Voucher balance</th>
+        </tr>
+
+        {% for person in customer_list %}
+        <tr> 
+            <td>{{ person.card_number }}</td>
+            <td><a href="{% url 'customer_detail' person.pk %}">{{ person.first_name }} {{ person.surname }}</a></td>
+            <td>{{ person.cash.cash_value }}</td>
+            <td>{{ person.cash.voucher_value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% else %}
+  <p>There are no customers in the system.</p>
+{% endif %}   
+
+{% endblock %}

@@ -308,7 +308,27 @@ class VoucherDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('voucher_list')
 
 
-#class AuthorCreate(CreateView):
-#    model = Author
-#    fields = '__all__'
-#    initial = {'date_of_death': '05/01/2018'}
+class CustomerListView(PermissionRequiredMixin, generic.ListView):
+    """A list of all customers using the generic list view"""
+    permission_required = 'cashless.can_add_customers'
+    model = Customer
+    paginate_by = 20
+
+
+class CustomerUpdate(PermissionRequiredMixin, UpdateView):
+    """Customer update form using the generic view"""
+    permission_required = 'cashless.can_add_customers'
+    model = Customer
+    fields = [
+        'card_number',
+        'first_name',
+        'surname'
+    ]
+    template_name_suffix = '_handler'
+
+
+class CustomerDelete(PermissionRequiredMixin, DeleteView):
+    """Customer delete form using the generic view"""
+    permission_required = 'cashless.can_add_customer'
+    model = Customer
+    success_url = reverse_lazy('customer_list')

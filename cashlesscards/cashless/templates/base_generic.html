@@ -18,12 +18,17 @@
 <!-- Navigation bar -->
 {% block topbar %}
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-  <a href="/" class="w3-bar-item w3-button w3-text-red w3-hover-red w3-mobile"><b><i class="fa fa-cutlery w3-margin-right"></i>Cashless Cards</b></a>
+  <a href="/" class="w3-bar-item w3-button w3-text-red w3-hover-red w3-mobile"><b><i class="fa fa-id-card w3-margin-right"></i>Cashless Cards</b></a>
   
     {% if user.is_authenticated %}
         <a href="{% url 'info' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Info</a>
-        {% if perms.cashless.view_finance %}
-          <a href="{% url 'activity_log' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Activity log</a>
+        {% if perms.can_add_customers %}
+          <div class="w3-dropdown-hover w3-mobile">
+            <button class="w3-button">Customers <i class="fa fa-caret-down"></i></button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+              <a href="{% url 'customer_list' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">View existing</a>
+            </div>
+          </div>
         {% endif %}
         {% if perms.can_add_vouchers %}
           <div class="w3-dropdown-hover w3-mobile">
@@ -34,8 +39,14 @@
             </div>
           </div>
         {% endif %}
+        {% if perms.cashless.view_finance %}
+          <a href="{% url 'activity_log' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Activity log</a>
+        {% endif %}
         <a href="{% url 'logout'%}?next=/" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey w3-mobile">Logout</a>
-        <div class="w3-bar-item w3-right w3-text-grey w3-mobile">User: {{ user.get_username }}</div>
+        <div class="w3-bar-item w3-right w3-text-grey w3-mobile">
+          <i class="fa fa-user"></i>
+          User: {{ user.get_username }}
+        </div>
     {% else %}
         <a href="{% url 'login'%}?next=/" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey w3-mobile">Login</a>
     {% endif %}

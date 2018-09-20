@@ -8,7 +8,7 @@ from cashless import customsettings
 from cashless.models import Voucher, Customer, Cash, Transaction
 
 
-class IndexTest(TestCase):
+class IndexViewTest(TestCase):
     """Tests the index view"""
     def test_view_url_exists_at_desired_location(self):
         """The URL exists in the expected location"""
@@ -27,7 +27,7 @@ class IndexTest(TestCase):
         self.assertTemplateUsed(response, 'index.html')
 
 
-class InfoTest(TestCase):
+class InfoViewTest(TestCase):
     """Tests the info view"""
     def test_view_url_exists_at_desired_location(self):
         """The URL exists in the expected location"""
@@ -46,7 +46,7 @@ class InfoTest(TestCase):
         self.assertTemplateUsed(response, 'cashless/info.html')
 
 
-class SearchTest(TestCase):
+class SearchViewTest(TestCase):
     """Tests the search view"""
     def setUp(self):
         """Set up non-modified objects used by all test methods"""
@@ -88,7 +88,7 @@ class SearchTest(TestCase):
         self.assertTemplateUsed(response, 'cashless/results.html')
 
 
-class ActivityLogByUserTest(TestCase):
+class ActivityLogViewTest(TestCase):
     """Tests the activity log view"""
     def setUp(self):
         """Set up non-modified objects used by all test methods"""
@@ -362,7 +362,7 @@ class CreateNewVoucherViewTest(TestCase):
             password='2HJ1vRV0Z&3iD',
         )
         # Add permisssions
-        permission = Permission.objects.get(name='Create a new voucher')
+        permission = Permission.objects.get(name='Create and edit vouchers')
         test_user1.user_permissions.add(permission)
         test_user1.save()
         test_user2.save()
@@ -370,10 +370,10 @@ class CreateNewVoucherViewTest(TestCase):
     def test_redirect_if_not_logged_in(self):
         """The view will redirect to a login page if the user is not logged in"""
         response = self.client.get(reverse('create_new_voucher'))
-        self.assertRedirects(response, '/accounts/login/?next=/cashless/newvoucher/')
+        self.assertRedirects(response, '/accounts/login/?next=/cashless/voucher/new')
 
     def test_redirect_if_user_not_permitted(self):
         """The view will redirect if the user doesn't have permisssions"""
         self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
         response = self.client.get(reverse('create_new_voucher'))
-        self.assertRedirects(response, '/accounts/login/?next=/cashless/newvoucher/')
+        self.assertRedirects(response, '/accounts/login/?next=/cashless/voucher/new')

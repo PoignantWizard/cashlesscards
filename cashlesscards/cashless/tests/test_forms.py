@@ -3,8 +3,9 @@ from django.test import TestCase
 from djmoney.money import Money
 
 from cashless import customsettings
-from cashless.models import Voucher, VoucherLink
-from cashless.forms import AddCashForm, DeductCashForm, AddVoucherLinkForm, CreateNewVoucherForm
+from cashless.models import Voucher, VoucherLink, Customer
+from cashless.forms import AddCashForm, DeductCashForm, AddVoucherLinkForm
+from cashless.forms import CreateNewVoucherForm, CreateNewCustomerForm
 
 
 class AddCashFormTest(TestCase):
@@ -281,5 +282,196 @@ class CreateNewVoucherFormTest(TestCase):
                 'value': test_value,
             },
             existing_vouchers=existing_vouchers
+        )
+        self.assertFalse(form.is_valid())
+
+
+class CreateNewCustomerFormTest(TestCase):
+    """Tests the create new customer account form"""
+    def setUp(self):
+        """Set up non-modified objects used by all test methods"""
+        # Create test customers
+        test_customer1 = Customer.objects.create(
+            card_number=99,
+            first_name='John',
+            surname='Smith',
+        )
+        test_customer2 = Customer.objects.create(
+            card_number=98,
+            first_name='Sophie',
+            surname='Smith',
+        )
+        test_customer1.save()
+        test_customer2.save()
+
+    def test_card_number_field_lable(self):
+        """The field label of the card number field is as expected"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        form = CreateNewCustomerForm(existing_cards=existing_cards)
+        self.assertTrue(form.fields['card_number'].label is None\
+        or form.fields['card_number'].label == 'card number')
+
+    def test_first_name_field_lable(self):
+        """The field label of the first name field is as expected"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        form = CreateNewCustomerForm(existing_cards=existing_cards)
+        self.assertTrue(form.fields['first_name'].label is None\
+        or form.fields['first_name'].label == 'first name')
+
+    def test_surname_field_lable(self):
+        """The field label of the surname field is as expected"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        form = CreateNewCustomerForm(existing_cards=existing_cards)
+        self.assertTrue(form.fields['surname'].label is None\
+        or form.fields['surname'].label == 'surname')
+
+    def test_opening_balance_field_lable(self):
+        """The field label of the opening balance field is as expected"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        form = CreateNewCustomerForm(existing_cards=existing_cards)
+        self.assertTrue(form.fields['opening_balance'].label is None\
+        or form.fields['opening_balance'].label == 'opening balance')
+
+    def test_first_name_is_none(self):
+        """The form rejects a null value in the first name field"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        test_first_name = None
+        test_surname = 'test'
+        test_card_number = 1
+        test_opening_balance = Money(1, customsettings.CURRENCY)
+        form = CreateNewCustomerForm(
+            data={
+                'first_name': test_first_name,
+                'surname': test_surname,
+                'card_number': test_card_number,
+                'opening_balance': test_opening_balance,
+            },
+            existing_cards=existing_cards
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_surname_is_none(self):
+        """The form rejects a null value in the surname field"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        test_first_name = 'test'
+        test_surname = None
+        test_card_number = 1
+        test_opening_balance = Money(1, customsettings.CURRENCY)
+        form = CreateNewCustomerForm(
+            data={
+                'first_name': test_first_name,
+                'surname': test_surname,
+                'card_number': test_card_number,
+                'opening_balance': test_opening_balance,
+            },
+            existing_cards=existing_cards
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_card_number_exists(self):
+        """The form rejects a card number that already exists"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        test_first_name = 'test'
+        test_surname = 'test'
+        test_card_number = 1
+        test_opening_balance = Money(1, customsettings.CURRENCY)
+        form = CreateNewCustomerForm(
+            data={
+                'first_name': test_first_name,
+                'surname': test_surname,
+                'card_number': test_card_number,
+                'opening_balance': test_opening_balance,
+            },
+            existing_cards=existing_cards
+        )
+        form = CreateNewCustomerForm(
+            data={
+                'first_name': test_first_name,
+                'surname': test_surname,
+                'card_number': test_card_number,
+                'opening_balance': test_opening_balance,
+            },
+            existing_cards=existing_cards
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_card_number_is_zero(self):
+        """The form rejects a card number of zero"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        test_first_name = 'test'
+        test_surname = 'test'
+        test_card_number = 0
+        test_opening_balance = Money(1, customsettings.CURRENCY)
+        form = CreateNewCustomerForm(
+            data={
+                'first_name': test_first_name,
+                'surname': test_surname,
+                'card_number': test_card_number,
+                'opening_balance': test_opening_balance,
+            },
+            existing_cards=existing_cards
+        )
+        self.assertFalse(form.is_valid())
+
+    def test_opening_balance_is_negative(self):
+        """The form rejects negative values"""
+        # get test customer details
+        cust_inst = Customer.objects.all()
+        existing_cards = []
+        for cust in cust_inst:
+            existing_cards.append(cust.card_number)
+        # test instance
+        test_first_name = 'test'
+        test_surname = 'test'
+        test_card_number = 1
+        test_opening_balance = Money(-1, customsettings.CURRENCY)
+        form = CreateNewCustomerForm(
+            data={
+                'first_name': test_first_name,
+                'surname': test_surname,
+                'card_number': test_card_number,
+                'opening_balance': test_opening_balance,
+            },
+            existing_cards=existing_cards
         )
         self.assertFalse(form.is_valid())

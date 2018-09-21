@@ -377,3 +377,34 @@ class CreateNewVoucherViewTest(TestCase):
         self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
         response = self.client.get(reverse('create_new_voucher'))
         self.assertRedirects(response, '/accounts/login/?next=/cashless/voucher/new')
+
+
+class CreateNewCustomerViewTest(TestCase):
+    """Tests the create new customer view"""
+    def setUp(self):
+        """Set up non-modified objects used by all test methods"""
+        # Create a user
+        test_user1 = User.objects.create_user(
+            username='testuser1',
+            password='1X<ISRUkw+tuK',
+        )
+        test_user2 = User.objects.create_user(
+            username='testuser2',
+            password='2HJ1vRV0Z&3iD',
+        )
+        # Add permisssions
+        permission = Permission.objects.get(name='Create and edit customer accounts')
+        test_user1.user_permissions.add(permission)
+        test_user1.save()
+        test_user2.save()
+
+    def test_redirect_if_not_logged_in(self):
+        """The view will redirect to a login page if the user is not logged in"""
+        response = self.client.get(reverse('create_new_customer'))
+        self.assertRedirects(response, '/accounts/login/?next=/cashless/customer/new')
+
+    def test_redirect_if_user_not_permitted(self):
+        """The view will redirect if the user doesn't have permisssions"""
+        self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
+        response = self.client.get(reverse('create_new_customer'))
+        self.assertRedirects(response, '/accounts/login/?next=/cashless/customer/new')

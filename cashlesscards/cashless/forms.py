@@ -160,3 +160,88 @@ class CreateNewVoucherForm(forms.Form):
 
         # Return the cleaned data
         return v_value
+
+
+class CreateNewCustomerForm(forms.Form):
+    """Generates the form for creating a new customer account"""
+
+    def __init__(self, *args, **kwargs):
+        """Initializes the form to handle special arguments"""
+        self.existing_cards = kwargs.pop('existing_cards')
+        super(CreateNewCustomerForm, self).__init__(*args, **kwargs)
+
+    first_name = forms.CharField(
+        max_length=255,
+        help_text="Enter the customer's first name."
+    )
+    surname = forms.CharField(
+        max_length=255,
+        help_text="Enter the customer's last name."
+    )
+    card_number = forms.IntegerField(
+        help_text="Enter the customer's card number to associate a cash account."
+    )
+    opening_balance = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency=customsettings.CURRENCY,
+        help_text="Select the opening balance for the cash account."
+    )
+
+    def clean_customer_first_name(self):
+        """cleans up user data before creating customer account"""
+        c_first_name = self.cleaned_data['first_name']
+
+        # Check that a customer name has been selected
+        if not c_first_name:
+            raise ValidationError(ugettext_lazy('Invalid value - no customer first name entered'))
+
+        # Return the cleaned data
+        return c_first_name
+
+    def clean_customer_surname(self):
+        """cleans up user data before creating customer account"""
+        c_surname = self.cleaned_data['surname']
+
+        # Check that a customer name has been selected
+        if not c_surname:
+            raise ValidationError(ugettext_lazy('Invalid value - no customer last name entered'))
+
+        # Return the cleaned data
+        return c_surname
+
+    def clean_card_number(self):
+        """cleans up user data before creating customer account"""
+        c_card_number = self.cleaned_data['card_number']
+
+        # Check that a card number has been selected
+        if not c_card_number:
+            raise ValidationError(ugettext_lazy('Invalid value - no card number entered'))
+
+        # Check that card number is not zero
+        if c_card_number == 0:
+            raise ValidationError(ugettext_lazy("Invalid value - card number can't be zero"))
+
+        # Check that card number is not negative
+        if c_card_number < 0:
+            raise ValidationError(ugettext_lazy("Invalid value - card number can't be negative"))
+
+        # Check if a card number already exists
+        if c_card_number in self.existing_cards:
+            raise ValidationError(ugettext_lazy(
+                'Invalid value - a card with this number already exists on the system'
+            ))
+
+        # Return the cleaned data
+        return c_card_number
+
+    def clean_opening_balance(self):
+        """cleans up user data before creating customer account"""
+        c_opening_balance = self.cleaned_data['opening_balance']
+
+        # Check value is not negative
+        if c_opening_balance < Money(0, customsettings.CURRENCY):
+            raise ValidationError(ugettext_lazy('Invalid value - opening balance is negative'))
+
+        # Return the cleaned data
+        return c_opening_balance

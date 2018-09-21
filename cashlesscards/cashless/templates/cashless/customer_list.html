@@ -3,6 +3,7 @@
 {% block content %}
 
 <h1>Customers</h1>
+<p><a href="{% url 'create_new_customer' %}"><button class="w3-button w3-dark-grey" target="_blank">Create a new customer account</button></a></p>
 {% if customer_list %}
 <div class="w3-responsive">
     <table>

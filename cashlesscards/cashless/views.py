@@ -14,7 +14,8 @@ from djmoney.money import Money
 
 from . import customsettings
 from .models import Customer, Cash, Transaction, VoucherLink, Voucher
-from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm, CreateNewVoucherForm
+from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm
+from .forms import CreateNewVoucherForm, CreateNewCustomerForm
 from .voucherhandler import apply_voucher, debit_voucher
 
 
@@ -254,7 +255,7 @@ def create_new_voucher(request):
 
             # redirect to a new URL
             return HttpResponseRedirect(
-                reverse('voucher_detail')
+                reverse('voucher_detail', kwargs={'pk':new_voucher.pk})
             )
 
     # if this is a GET (or any other method) create the default form.
@@ -306,6 +307,75 @@ class VoucherDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'cashless.can_add_vouchers'
     model = Voucher
     success_url = reverse_lazy('voucher_list')
+
+
+@permission_required('can_add_customers')
+def create_new_customer(request):
+    """View function for creating a new voucher"""
+    # get customer details
+    cust_inst = Customer.objects.all()
+    existing_cards = []
+    for cust in cust_inst:
+        existing_cards.append(cust.card_number)
+
+    # initialize form
+    form = CreateNewCustomerForm(request.POST, existing_cards=existing_cards)
+
+    if request.method == "POST":
+        if form.is_valid():
+            # process the input
+            clean_first_name = form.cleaned_data['first_name']
+            clean_surname = form.cleaned_data['surname']
+            clean_card_number = form.cleaned_data['card_number']
+            clean_opening_balance = form.cleaned_data['opening_balance']
+
+            # build new customer and write to model
+            new_customer = Customer(
+                card_number=clean_card_number,
+                first_name=clean_first_name,
+                surname=clean_surname,
+            )
+            new_customer.save()
+
+            # build new cash account and write to model
+            new_cash = Cash(
+                customer_id=new_customer.pk,
+                cash_value=clean_opening_balance,
+            )
+            new_cash.save()
+
+            # build new transaction record and write to model
+            new_transaction = Transaction(
+                customer_id=new_customer.pk,
+                transaction_type="credit",
+                transaction_value=clean_opening_balance,
+            )
+            new_transaction.save()
+
+            # redirect to a new URL
+            return HttpResponseRedirect(
+                reverse('customer_detail', kwargs={'pk':new_customer.pk})
+            )
+
+    # if this is a GET (or any other method) create the default form.
+    else:
+        proposed_first_name = ""
+        proposed_surname = ""
+        proposed_card_number = ""
+        proposed_opening_balance = Money(0, customsettings.CURRENCY)
+        form = CreateNewCustomerForm(
+            initial={
+                'first_name': proposed_first_name,
+                'surname': proposed_surname,
+                'card_number': proposed_card_number,
+                'opening_balance': proposed_opening_balance,
+            },
+            existing_cards=existing_cards
+        )
+
+    return render(request, 'cashless/customer_new.html', {
+        'form':form,
+    })
 
 
 class CustomerListView(PermissionRequiredMixin, generic.ListView):

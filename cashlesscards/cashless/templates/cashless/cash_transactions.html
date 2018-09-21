@@ -5,7 +5,7 @@
     {% if too_much %}<p><strong>You don't have enough cash in your account for that! Try again.</strong></p>{% endif %}
     <p>Voucher value: {{ cashinst.voucher_value }}
     <p>Current cash held on system: {{cashinst.cash_value}}</p>
-    <p>Total balance: {{ cashinst.total }}</p>
+    <p><strong>Total balance: {{ cashinst.total }}</strong></p>
     
     <div class="w3-responsive">
         <form action="" method="post">

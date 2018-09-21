@@ -9,6 +9,7 @@
         <div class="w3-full">
           <p>Voucher value: {{ results.cash.voucher_value }}</p>
           <p>Cash balance: {{ results.cash.cash_value }} </p>
+          <p><strong>Total balance: {{ results.total_balance }}</strong></p>
           <br />
           <p>
             {% if perms.cashless.can_transact %}

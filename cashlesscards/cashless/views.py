@@ -56,12 +56,28 @@ def search(request):
     if query:
         results = Customer.objects.get(card_number=query)
         apply_voucher(results)
+        cash_inst = cash_inst = Cash.objects.get(customer_id=results.pk)
+        results.total_balance = cash_inst.cash_value + cash_inst.voucher_value
     return render(request, 'cashless/results.html', {"results": results,})
 
 
 class CustomerDetailView(generic.DetailView):
     """Customer detail using the generic detail view"""
     model = Customer
+
+    def get_context_data(self, **kwargs):
+        """override context data defaults"""
+        context = super(CustomerDetailView, self).get_context_data(**kwargs)
+        total_balance = self.get_total_balance()
+        context['total_balance'] = total_balance
+        return context
+
+    def get_total_balance(self):
+        """calculate the customer's total balance"""
+        pk = self.kwargs.get('pk')
+        cash_inst = Cash.objects.get(customer_id=pk)
+        total_balance = cash_inst.cash_value + cash_inst.voucher_value
+        return total_balance
 
 
 @permission_required('cashless.can_transact')

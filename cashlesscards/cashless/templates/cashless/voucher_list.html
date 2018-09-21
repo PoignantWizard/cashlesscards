@@ -14,7 +14,7 @@
         </tr>
 
         {% for voucher in voucher_list %}
-        <tr> 
+        <tr class="hover-table"> 
             <td>{{ voucher.voucher_application }}</td>
             <td><a href="{% url 'voucher_detail' voucher.pk %}">{{ voucher.voucher_name }}</a></td>
             <td>{{ voucher.voucher_value }}</td>

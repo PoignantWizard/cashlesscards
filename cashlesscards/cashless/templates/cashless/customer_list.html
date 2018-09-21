@@ -14,7 +14,7 @@
         </tr>
 
         {% for person in customer_list %}
-        <tr> 
+        <tr class="hover-table"> 
             <td>{{ person.card_number }}</td>
             <td><a href="{% url 'customer_detail' person.pk %}">{{ person.first_name }} {{ person.surname }}</a></td>
             <td>{{ person.cash.cash_value }}</td>

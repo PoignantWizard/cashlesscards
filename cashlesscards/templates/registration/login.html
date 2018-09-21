@@ -15,23 +15,28 @@
     {% endif %}
   {% endif %}
 
-  <form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
+  <div class="w3-responsive">
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
 
-  <div>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-  </div>
-  <div>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-  </div>
+    <table>
+      <tr>
+        <td>{{ form.username.label_tag }}</td>
+        <td>{{ form.username }}</td>
+      </tr>
+      <tr>
+        <td>{{ form.password.label_tag }}</td>
+        <td>{{ form.password }}</td>
+      </tr>
+    </table>
 
-  <div>
-    <input class="w3-button w3-dark-grey" type="submit" value="Login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </div>
-  </form>
+    <div>
+      <input class="w3-button w3-dark-grey" type="submit" value="Login" />
+      <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+
+    </form>
+</div>
 
   {# Assumes you setup the password_reset view in your URLconf #}
   <p><a href="{% url 'password_reset' %}"><button class="w3-button w3-dark-grey" target="_blank">Lost password?</button></a></p>

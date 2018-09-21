@@ -6,7 +6,7 @@ from django.views import generic
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import UpdateView, DeleteView
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -217,7 +217,7 @@ def add_voucher_link(request, pk):
             existing_vouchers=existing_vouchers
         )
 
-    return render(request, 'cashless/assign_voucher.html', {
+    return render(request, 'cashless/voucher_assign.html', {
         'form':form,
         'custom_inst':custom_inst,
         'link_inst':link_inst,
@@ -271,7 +271,7 @@ def create_new_voucher(request):
             existing_vouchers=existing_vouchers
         )
 
-    return render(request, 'cashless/new_voucher.html', {
+    return render(request, 'cashless/voucher_new.html', {
         'form':form,
     })
 

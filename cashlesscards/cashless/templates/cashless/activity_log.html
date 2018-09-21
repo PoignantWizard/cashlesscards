@@ -15,7 +15,7 @@
         </tr>
 
         {% for item in transaction_log %}
-        <tr> 
+        <tr class="hover-table"> 
             <td>{{ item.customer.surname }}, {{ item.customer.first_name }}</td>
             <td>{{ item.transaction_time }}</td>
             <td>{{ item.transaction_type }}</td>

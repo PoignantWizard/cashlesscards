@@ -13,37 +13,43 @@
           <br />
           <p>
             {% if perms.cashless.can_transact %}
-              <a href="{% url 'add_cash_cashier' results.pk %}">
+              <a href="{% url 'add_cash_cashier' customer.pk %}">
                 <button class="w3-button w3-dark-grey" target="_blank">Add cash to account</button>
               </a>
-              <a href="{% url 'deduct_cash_cashier' results.pk %}">
+              <a href="{% url 'deduct_cash_cashier' customer.pk %}">
                 <button class="w3-button w3-dark-grey" target="_blank">Deduct cash from account</button>
               </a>
-            {% endif %} 
-            {% if perms.can_assign_voucher %}
-              <a href="{% url 'add_voucher_link' results.pk %}">
-                <button class="w3-button w3-dark-grey" target="_blank">Assign voucher</button>
+            {% endif %}
+            {% if perms.cashless.can_add_customer %}
+              <a href="{% url 'update_customer' customer.pk %}">
+                <button class="w3-button w3-dark-grey" target="_blank">Update</button>
+              </a>
+              <a href="{% url 'delete_customer' customer.pk %}">
+                  <button class="w3-button w3-dark-grey" target="_blank">Delete</button>
               </a>
             {% endif %}
-            <a href="/"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a>
-          </p>
+            {% if perms.can_assign_voucher %}
+              <a href="{% url 'add_voucher_link' customer.pk %}">
+                <button class="w3-button w3-dark-grey" target="_blank">Assign voucher</button>
+              </a>
+          {% endif %}
+            </p>
+            <p><a href="/"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a></p>
         </div>
       </div>
 
 {% else %}
-      <!-- Search box -->
-      <div id="cardsearch" class="w3-container w3-white w3-padding-16 myLink">
-        <h3 class='error'>Please enter a valid card number</h3>
-        <div class="w3-row-padding" style="margin:0 -16px;">
-          <div class="w3-full">
-            <label>ID card number</label>
-            <form method="get" action="/cashless/search/">
-              <input class="w3-input w3-border" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
-              <p><input class="w3-button w3-dark-grey" type="submit" value="Search and find cash balance" /></p>
-            </form>
-          </div>
-          </div>
-          </div>
+    <!-- Search box -->
+    <h3 class='error'>Please enter a valid card number</h3>
+    <div class="w3-row-padding" style="margin:0 -16px;">
+      <div class="w3-full">
+        <label>ID card number</label>
+        <form method="get" action="/cashless/search/">
+          <input class="w3-input w3-border" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
+          <p><input class="w3-button w3-dark-grey" type="submit" value="Find cash balance" /></p>
+        </form>
+      </div>
+    </div>
 
 {% endif %}
 

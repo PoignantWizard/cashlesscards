@@ -25,4 +25,5 @@ urlpatterns = [
     path('customer/<int:pk>/deductcash/', views.deduct_cash_cashier, name='deduct_cash_cashier'),
     # logs and reports
     path('log', views.ActivityLog.as_view(), name='activity_log'),
+    path('log/activitylog.csv', views.ActivityLogToCsv.as_view(), name='activity_log_csv'),
 ]

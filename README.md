@@ -1,7 +1,7 @@
 # Cashless card system
 
 A system designed to provide a cashless service in a "closed" environment, 
-such as schools and colleges. 
+such as offices, clinics, and schools. 
 
 Detailed documentation is in the "docs" directory.
 
@@ -12,7 +12,7 @@ Detailed documentation is in the "docs" directory.
 2. Start the development server and visit http://127.0.0.1:8000/admin/
    to try out the system (you'll need the Admin app enabled).
 
-3. Visit http://127.0.0.1:8000/polls/ to interact with the web sevice. 
+3. Visit http://127.0.0.1:8000/cashless/ to interact with the web sevice. 
    You'll need a NFC capable ID card to enjoy all the features on offer. 
 
 ## Contributing

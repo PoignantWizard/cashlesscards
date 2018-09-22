@@ -1,0 +1,3 @@
+Customer surname, Customer first name, Time, Type, Cash value, Voucher value
+{% for item in transaction_log %}{{ item.customer.first_name }}, {{ item.customer.surname }}, {{ item.transaction_time }}, {{ item.transaction_type }}, {{ item.transaction_value }}, {{ item.voucher_value }}
+{% endfor %}

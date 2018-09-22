@@ -53,11 +53,14 @@ def search(request):
     except ValueError:
         query = None
         results = None
-    if query:
-        results = Customer.objects.get(card_number=query)
-        apply_voucher(results)
-        cash_inst = cash_inst = Cash.objects.get(customer_id=results.pk)
-        results.total_balance = cash_inst.cash_value + cash_inst.voucher_value
+    try:
+        if query:
+            results = Customer.objects.get(card_number=query)
+            apply_voucher(results)
+            cash_inst = cash_inst = Cash.objects.get(customer_id=results.pk)
+            results.total_balance = cash_inst.cash_value + cash_inst.voucher_value
+    except:
+        results = None
     return render(request, 'cashless/results.html', {"results": results,})
 
 
@@ -177,20 +180,6 @@ def deduct_cash_cashier(request, pk):
         form = DeductCashForm(initial={'cash_to_deduct': proposed_cash_value,})
 
     return render(request, 'cashless/cash_transactions.html', {'form':form, 'cashinst':cash_inst})
-
-
-class ActivityLog(PermissionRequiredMixin, generic.ListView):
-    """Transaction log using the generic list view"""
-    permission_required = 'cashless.view_finance'
-    model = Transaction
-    paginate_by = 20
-    context_object_name = 'transaction_log'
-    template_name = 'cashless/activity_log.html'
-
-    def get_queryset(self):
-        """Filter log down to records from just this year"""
-        now = datetime.datetime.now()
-        return Transaction.objects.filter(transaction_time__month=now.month)
 
 
 @permission_required('can_assign_voucher')
@@ -418,3 +407,23 @@ class CustomerDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'cashless.can_add_customer'
     model = Customer
     success_url = reverse_lazy('customer_list')
+
+
+class ActivityLog(PermissionRequiredMixin, generic.ListView):
+    """Transaction log using the generic list view"""
+    permission_required = 'cashless.view_finance'
+    model = Transaction
+    paginate_by = 20
+    context_object_name = 'transaction_log'
+    template_name = 'cashless/activity_log.html'
+
+    def get_queryset(self):
+        """Filter log down to records from just this year"""
+        now = datetime.datetime.now()
+        return Transaction.objects.filter(transaction_time__month=now.month)
+
+
+class ActivityLogToCsv(ActivityLog):
+    """Subclass of activity log that produces a CSV file"""
+    template_name = 'cashless/activitylog.csv'
+    content_type = 'text/csv'

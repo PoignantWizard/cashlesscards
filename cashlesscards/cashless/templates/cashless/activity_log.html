@@ -4,6 +4,7 @@
 
 <h1>Transaction log</h1>
 {% if transaction_log %}
+<p><a href="{% url 'activity_log_csv' %}"><button class="w3-button w3-dark-grey" target="_blank">Download CSV</button></a></p>
 <div class="w3-responsive">
     <table>
         <tr>

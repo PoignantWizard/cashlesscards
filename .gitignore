@@ -1,4 +1,4 @@
 *.pyc
 __pycache__
-*credentials.py
+credentials.py
 *db.sqlite3

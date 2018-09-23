@@ -17,6 +17,11 @@ recommend working at the group level as we've found it much easier to manage
 this way. 
 
 The permissions used by cashless cards are: 
+- Create and edit vouchers
+- Create and edit customer accounts
+- Conduct transactions
+- Assign vouchers to customers
+- Can view transaction log
 
 
 ## Customers

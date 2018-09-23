@@ -28,6 +28,7 @@ class Voucher(models.Model):
     class Meta:
         """Declare model-level metadata"""
         ordering = ["voucher_name"]
+        default_permissions = ()
         permissions = (
             ("can_add_vouchers", "Create and edit vouchers"),
         )
@@ -47,6 +48,7 @@ class Customer(models.Model):
         """Declare model-level metadata to control default ordering of records and set plural"""
         ordering = ["surname", "first_name"]
         verbose_name_plural = "customers"
+        default_permissions = ()
         permissions = (
             ("can_add_customers", "Create and edit customer accounts"),
         )
@@ -83,6 +85,7 @@ class Cash(models.Model):
     class Meta:
         """Declare model-level metadata to set plural"""
         verbose_name_plural = "cash"
+        default_permissions = ()
         permissions = (
             ("can_transact", "Conduct transactions"),
         )
@@ -103,6 +106,7 @@ class VoucherLink(models.Model):
 
     class Meta:
         """Declare model-level metadata"""
+        default_permissions = ()
         permissions = (
             ("can_assign_voucher", "Assign vouchers to customers"),
         )
@@ -142,6 +146,7 @@ class Transaction(models.Model):
         """Declare model-level metadata to control default ordering of records and set plural"""
         ordering = ["-transaction_time"]
         verbose_name_plural = "transactions"
+        default_permissions = ()
         permissions = (
             ("view_finance", "Can view transaction log"),
         )

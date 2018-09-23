@@ -9,7 +9,7 @@
             <p>Voucher value: {{ voucher.voucher_value }}</p>
             <br />
             <p>
-              {% if perms.cashless.can_add_voucher %}
+              {% if perms.cashless.can_add_vouchers %}
                 <a href="{% url 'update_voucher' voucher.pk %}">
                   <button class="w3-button w3-dark-grey" target="_blank">Update</button>
                 </a>

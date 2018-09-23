@@ -13,23 +13,23 @@
           <br />
           <p>
             {% if perms.cashless.can_transact %}
-              <a href="{% url 'add_cash_cashier' customer.pk %}">
+              <a href="{% url 'add_cash_cashier' results.pk %}">
                 <button class="w3-button w3-dark-grey" target="_blank">Add cash to account</button>
               </a>
-              <a href="{% url 'deduct_cash_cashier' customer.pk %}">
+              <a href="{% url 'deduct_cash_cashier' results.pk %}">
                 <button class="w3-button w3-dark-grey" target="_blank">Deduct cash from account</button>
               </a>
             {% endif %}
-            {% if perms.cashless.can_add_customer %}
-              <a href="{% url 'update_customer' customer.pk %}">
+            {% if perms.cashless.can_add_customers %}
+              <a href="{% url 'update_customer' results.pk %}">
                 <button class="w3-button w3-dark-grey" target="_blank">Update</button>
               </a>
-              <a href="{% url 'delete_customer' customer.pk %}">
+              <a href="{% url 'delete_customer' results.pk %}">
                   <button class="w3-button w3-dark-grey" target="_blank">Delete</button>
               </a>
             {% endif %}
-            {% if perms.can_assign_voucher %}
-              <a href="{% url 'add_voucher_link' customer.pk %}">
+            {% if perms.cashless.can_assign_voucher %}
+              <a href="{% url 'add_voucher_link' results.pk %}">
                 <button class="w3-button w3-dark-grey" target="_blank">Assign voucher</button>
               </a>
           {% endif %}

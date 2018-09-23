@@ -18,7 +18,7 @@
                   <button class="w3-button w3-dark-grey" target="_blank">Deduct cash from account</button>
                 </a>
               {% endif %}
-              {% if perms.cashless.can_add_customer %}
+              {% if perms.cashless.can_add_customers %}
                 <a href="{% url 'update_customer' customer.pk %}">
                   <button class="w3-button w3-dark-grey" target="_blank">Update</button>
                 </a>
@@ -26,7 +26,7 @@
                     <button class="w3-button w3-dark-grey" target="_blank">Delete</button>
                 </a>
               {% endif %}
-              {% if perms.can_assign_voucher %}
+              {% if perms.cashless.can_assign_voucher %}
                 <a href="{% url 'add_voucher_link' customer.pk %}">
                   <button class="w3-button w3-dark-grey" target="_blank">Assign voucher</button>
                 </a>

@@ -182,7 +182,7 @@ def deduct_cash_cashier(request, pk):
     return render(request, 'cashless/cash_transactions.html', {'form':form, 'cashinst':cash_inst})
 
 
-@permission_required('can_assign_voucher')
+@permission_required('cashless.can_assign_voucher')
 def add_voucher_link(request, pk):
     """View function for assigning a voucher to a specific customer's account"""
     link_inst = VoucherLink.objects.filter(customer_id=pk)
@@ -230,7 +230,7 @@ def add_voucher_link(request, pk):
     })
 
 
-@permission_required('can_add_vouchers')
+@permission_required('cashless.can_add_vouchers')
 def create_new_voucher(request):
     """View function for creating a new voucher"""
     vouch_inst = Voucher.objects.all()
@@ -314,7 +314,7 @@ class VoucherDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('voucher_list')
 
 
-@permission_required('can_add_customers')
+@permission_required('cashless.can_add_customers')
 def create_new_customer(request):
     """View function for creating a new voucher"""
     # get customer details

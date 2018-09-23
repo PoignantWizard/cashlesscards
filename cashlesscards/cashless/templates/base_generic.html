@@ -23,7 +23,7 @@
   
     {% if user.is_authenticated %}
         <a href="{% url 'info' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Info</a>
-        {% if perms.can_add_customers %}
+        {% if perms.cashless.can_add_customers %}
           <div class="w3-dropdown-hover w3-mobile">
             <button class="w3-button">Customers <i class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
@@ -32,7 +32,7 @@
             </div>
           </div>
         {% endif %}
-        {% if perms.can_add_vouchers %}
+        {% if perms.cashless.can_add_vouchers %}
           <div class="w3-dropdown-hover w3-mobile">
             <button class="w3-button">Vouchers <i class="fa fa-caret-down"></i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">

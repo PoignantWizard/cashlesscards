@@ -17,8 +17,8 @@ def mysql_setup(root_password, db, db_user, db_password):
                                                 + db_password + "';"
 
     cursor.execute(create_user)
-    cursor.execute("GRANT ALL PRIVILEGES ON cashlesscards.* TO " \
-                                + db_user + "@localhost;")
+    cursor.execute("GRANT ALL PRIVILEGES ON " + db + ".* TO '" \
+                                + db_user + "'@'localhost';")
     cursor.execute("FLUSH PRIVILEGES;")
 
 

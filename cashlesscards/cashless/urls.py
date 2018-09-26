@@ -20,6 +20,11 @@ urlpatterns = [
     path('customer/<int:pk>/update', views.CustomerUpdate.as_view(), name='update_customer'),
     path('customer/<int:pk>/delete', views.CustomerDelete.as_view(), name='delete_customer'),
     path('customer/<int:pk>/assignvoucher/', views.add_voucher_link, name='add_voucher_link'),
+    path(
+        'customer/<int:pk>/assignvoucher/<int:voucher_id>/remove/',
+        views.remove_voucher_link,
+        name='remove_voucher_link'
+    ),
     # transactions
     path('customer/<int:pk>/addcash/', views.add_cash_cashier, name='add_cash_cashier'),
     path('customer/<int:pk>/deductcash/', views.deduct_cash_cashier, name='deduct_cash_cashier'),

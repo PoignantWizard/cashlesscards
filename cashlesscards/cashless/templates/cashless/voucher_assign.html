@@ -2,12 +2,22 @@
 {% block content %}
 
     <h1>Customer: {{custom_inst.first_name}} {{custom_inst.surname}}</h1>
+        {% if link_inst %}
         <p>Current vouchers:</p>
-            <ul>
+            <table>
             {% for link in link_inst %}
-                <li>{{ link.voucher.voucher_name }}: {{ link.voucher.voucher_value }}</li>
+            <tr>
+                <td>
+                    {{ link.voucher.voucher_name }}: {{ link.voucher.voucher_value }}
+                </td>
+                <td>
+                    <a href="{% url 'remove_voucher_link' pk=custom_inst.pk voucher_id=link.voucher_id %}"><button class="w3-button w3-red" target="_blank">Unassign</button></a>
+                </td>
+            </tr>
             {% endfor %}
-            </ul>
+        </table>
+        <br />
+        {% endif %}
     
     <div class="w3-responsive">
         <form action="" method="post">

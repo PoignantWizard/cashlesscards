@@ -95,6 +95,22 @@ class AddVoucherLinkForm(forms.Form):
         return data
 
 
+class RemoveVoucherLinkForm(forms.Form):
+    """Generates the form fro deleting a voucher from a customer's record"""
+    delete_voucher = forms.TypedChoiceField(
+        coerce=lambda x: x =='True',
+        choices=(
+            (False, 'No'),
+            (True, 'Yes')
+        )
+    )
+
+    def clean_voucher(self):
+        """cleans up user data before unassigning voucher"""
+        data = self.cleaned_data['delete_voucher']
+        return data
+
+
 class CreateNewVoucherForm(forms.Form):
     """Generates the form for creating a new voucher"""
 

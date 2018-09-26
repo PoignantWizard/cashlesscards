@@ -14,7 +14,8 @@ from djmoney.money import Money
 
 from . import customsettings
 from .models import Customer, Cash, Transaction, VoucherLink, Voucher
-from .forms import AddCashForm, DeductCashForm, AddVoucherLinkForm
+from .forms import AddCashForm, DeductCashForm
+from .forms import AddVoucherLinkForm, RemoveVoucherLinkForm
 from .forms import CreateNewVoucherForm, CreateNewCustomerForm
 from .voucherhandler import apply_voucher, debit_voucher
 
@@ -208,7 +209,7 @@ def add_voucher_link(request, pk):
             # write it to the model
             new_voucher.save()
 
-            # redirect to a new URL:
+            # redirect to a new URL
             return HttpResponseRedirect(
                 reverse('customer_detail', kwargs={'pk':pk})
                 )
@@ -227,6 +228,40 @@ def add_voucher_link(request, pk):
         'form':form,
         'custom_inst':custom_inst,
         'link_inst':link_inst,
+    })
+
+
+@permission_required('cashless.can_assign_voucher')
+def remove_voucher_link(request, pk, voucher_id):
+    """View function for unassigning a voucher from a specific customer's account"""
+    link_inst = VoucherLink.objects.get(customer_id=pk, voucher_id=voucher_id)
+    custom_inst = Customer.objects.get(pk=pk)
+
+    # initialise form
+    form = RemoveVoucherLinkForm(request.POST)
+
+    if request.method == "POST":
+        if form.is_valid():
+            delete_voucher = form.cleaned_data['delete_voucher']
+            if delete_voucher is True:
+                # delete the voucher
+                link_inst.delete()
+
+                # redirect to a new URL
+                return HttpResponseRedirect(
+                    reverse('customer_detail', kwargs={'pk':pk})
+                )
+
+    # if this is a GET (or any other method) create the default form
+    else:
+        proposed_value = False
+        form = RemoveVoucherLinkForm(
+            initial={'delete_voucher': proposed_value}
+        )
+
+    return render(request, 'cashless/voucher_unassign.html', {
+        'form':form,
+        'custom_inst':custom_inst,
     })
 
 

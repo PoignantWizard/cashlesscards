@@ -7,11 +7,12 @@ from .models import VoucherLink, Voucher, Transaction
 
 
 def apply_voucher(customer):
-    """Updates the voucher value if haven't already this time period"""
+    """Resets the voucher value if haven't already this time period"""
     # get associated records
     voucher_list = VoucherLink.objects.filter(customer_id=customer.pk)
     cash_inst = customer.cash
     today = datetime.date.today()
+    value = 0
 
     # loop through customer's vouchers
     for v in voucher_list:
@@ -29,19 +30,23 @@ def apply_voucher(customer):
             or (v_inst.voucher_application == "monthly" and v.last_applied.month != today.month) \
             or (v_inst.voucher_application == "yearly" and v.last_applied.year != today.year):
 
-            # update cash balance
-            cash_inst.voucher_value += v_inst.voucher_value
-            cash_inst.save()
+            # update voucher value
+            value += v_inst.voucher_value
             v.last_applied = today
             v.save()
 
-            # update transaction log
-            transact = Transaction(
-                customer_id=customer.pk,
-                transaction_type="credit",
-                voucher_value=v_inst.voucher_value,
-            )
-            transact.save()
+    # update cash balance
+    transact_value = value - cash_inst.voucher_value
+    cash_inst.voucher_value += value
+    cash_inst.save()
+
+    # update transaction log
+    transact = Transaction(
+        customer_id=customer.pk,
+        transaction_type="credit",
+        voucher_value=transact_value,
+    )
+    transact.save()
 
 
 def debit_voucher(cash, value):

@@ -350,69 +350,6 @@ class AddVoucherLinkViewTest(TestCase):
             + str(test_customer.pk) + '/assignvoucher/')
 
 
-class RemoveVoucherLinkViewTest(TestCase):
-    """Tests the remove voucher link view"""
-    def setUp(self):
-        """Set up non-modified objects used by all test methods"""
-        # Define utility variables
-        today = datetime.datetime.now()
-
-        # Create a user
-        test_user1 = User.objects.create_user(
-            username='testuser1',
-            password='1X<ISRUkw+tuK',
-        )
-        test_user2 = User.objects.create_user(
-            username='testuser2',
-            password='2HJ1vRV0Z&3iD',
-        )
-        # Add permisssions
-        permission = Permission.objects.get(name='Assign vouchers to customers')
-        test_user1.user_permissions.add(permission)
-        test_user1.save()
-        test_user2.save()
-
-        # Create a customer, voucher, and voucher link
-        test_customer = Customer.objects.create(
-            card_number=99,
-            first_name='John',
-            surname='Smith',
-        )
-        test_voucher = Voucher.objects.create(
-            voucher_application="daily",
-            voucher_name="free breakfast",
-            voucher_value=Money(2, customsettings.CURRENCY),
-        )
-        test_link = VoucherLink.objects.create(
-            customer_id=1,
-            voucher_id=1,
-            last_applied=today,
-        )
-        test_customer.save()
-        test_voucher.save()
-        test_link.save()
-
-    def test_redirect_if_not_logged_in(self):
-        """The view will redirect to a login page if the user is not logged in"""
-        test_customer = Customer.objects.get(id=1)
-        test_link = VoucherLink.objects.get(customer_id=test_customer.pk)
-        response = self.client.get(reverse('remove_voucher_link', \
-            kwargs={'pk': test_customer.pk}))
-        self.assertRedirects(response, '/accounts/login/?next=/cashless/customer/' \
-            + str(test_customer.pk) + '/assignvoucher/' \
-            + str(test_link.voucher_id) + '/remove/')
-
-    def test_redirect_if_user_not_permitted(self):
-        """The view will redirect if the user doesn't have permisssions"""
-        test_customer = Customer.objects.get(id=1)
-        self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
-        response = self.client.get(reverse('remove_voucher_link', \
-            kwargs={'pk': test_customer.pk}))
-        self.assertRedirects(response, '/accounts/login/?next=/cashless/customer/' \
-            + str(test_customer.pk) + '/assignvoucher/' \
-            + str(test_link.voucher_id) + '/remove/')
-
-
 class CreateNewVoucherViewTest(TestCase):
     """Tests the create new voucher view"""
     def setUp(self):

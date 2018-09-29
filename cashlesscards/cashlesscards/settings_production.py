@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from . import credentials
 from cashless import customsettings
+from . import credentials
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

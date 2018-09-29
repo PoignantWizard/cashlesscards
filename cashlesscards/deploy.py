@@ -10,21 +10,13 @@ def get_packages():
     """Get required packages"""
     os.system("sudo apt-get update")
     packages = "sudo apt-get install " \
-            + "python3-pip python3-dev mysql-server libmysqlclient-dev " \
-            + "apache2 libapache2-mod-wsgi-py3"
+            + "python3-pip python3-dev python-mysqldb mysql-server libmysqlclient-dev "
     os.system(packages)
-
-
-def virtual_environment():
-    """Set up virtual environment"""
-    os.system("sudo pip3 install virtualenv")
-    os.system("virtualenv cashlesscardsenv")
 
 
 def python_packages():
     """Activate virtual environment and install required python packages"""
-    cmd = ". cashlesscardsenv/bin/activate && " \
-        + "pip3 install -r requirements.txt"
+    cmd = "pip3 install -r requirements.txt"
     os.system(cmd)
 
 
@@ -37,22 +29,68 @@ def configure_mysql():
     db = "cashlesscards"
     db_user = input("Enter new database username: ")
     db_password = getpass.getpass("Enter password: ")
-    cmd = ". cashlesscardsenv/bin/activate && " \
-        + "python3 cashlesscards/setupmysql.py -r " + root_password \
-        + " -d " + db \
-        + " -u " + db_user \
-        + " -p " + db_password
-    os.system(cmd)
+
+    # sets up the MySQL environment required by the cashless cards system
+    import MySQLdb
+    server = MySQLdb.connect(
+        host="localhost",
+        user="root",
+        password=root_password,
+    )
+    cursor = server.cursor()
+    cursor.execute("CREATE DATABASE " + db + " CHARACTER SET UTF8;")
+    create_user = "CREATE USER '" + db_user + "'@'localhost' IDENTIFIED BY '" \
+                                                + db_password + "';"
+    cursor.execute(create_user)
+    cursor.execute("GRANT ALL PRIVILEGES ON " + db + ".* TO '" \
+                                + db_user + "'@'localhost';")
+    cursor.execute("FLUSH PRIVILEGES;")
+
+    # return details for use by other setup functions
     return db, db_user, db_password
 
 
 def setup_credentials(db, db_user, db_password):
     """Set up credentials file"""
-    cmd = ". cashlesscardsenv/bin/activate && " \
-        + "python3 cashlesscards/setupcredentials.py -d " + db \
-        + " -u " + db_user \
-        + " -p " + db_password
-    os.system(cmd)
+    from django.core.management import utils
+    key = utils.get_random_secret_key()
+
+    ssl = input("Has SSL been enabled on the server yet? (y/n) ")
+    if ssl == "yes" or ssl == "Yes" or ssl == "y" or ssl == "Y":
+        ssl = True
+    else:
+        ssl = False
+
+    hosts = []
+    i = 0
+    print("Enter each allowed host. Leave the line blank", end=" ")
+    print("and press enter to finish entering hosts.")
+    while True:
+        i += 1
+        host = input("Enter host " + str(i) + ": ")
+        if host:
+            hosts.append(host)
+        else:
+            break
+
+    contents = '"""\n' \
+        + "Credentials required by in the cashless cards project\n" \
+        + "Ensure this is not served and kept a secret!\n" \
+        + '"""\n\n' \
+        + "# CRSF token\n" \
+        + "SECRET_KEY = '" + key + "'\n\n\n" \
+        + "# MySQL database details\n" \
+        + "DATABASE = '" + db + "'\n" \
+        + "DB_USER = '" + db_user + "'\n" \
+        + "DB_PASSWORD = '" + db_password + "'\n\n\n" \
+        + "# allowed hosts\n" \
+        + "ALLOWED_HOSTS = " + str(hosts) + "\n\n\n" \
+        + "# site security\n" \
+        + "SSL_ENABLED = " + str(ssl) + "\n"
+
+    fname = "cashlesscards/credentials.py"
+    with open(fname, 'w') as f:
+        f.write(contents)
 
 
 def deploy_production():
@@ -101,72 +139,53 @@ def setup_custom_settings():
 
 
 def django_deploy():
-    """Migrate models and create superuser"""
+    """Migrate models, collect static files and create superuser"""
     # migrate models to database
     try:
-        cmd = ". cashlesscardsenv/bin/activate && " \
-            + "python3 manage.py makemigrations"
+        cmd = "python3 manage.py makemigrations"
         os.system(cmd)
-        cmd = ". cashlesscardsenv/bin/activate && " \
-            + "python3 manage.py migrate"
+        cmd = "python3 manage.py migrate"
         os.system(cmd)
     except:
         print("Error migrating models to database...")
 
+    # collect static files
+    try:
+        cmd = "python3 manage.py collectstatic"
+        os.system(cmd)
+    except:
+        print("Error collecting static files...")
 
     # create superuser
     try:
-        cmd = ". cashlesscardsenv/bin/activate && " \
-            + "python3 manage.py createsuperuser"
+        cmd = "python3 manage.py createsuperuser"
         os.system(cmd)
     except:
         print("Error creating superuser...")
 
 
-def configure_apache():
-    """Configure apache web server"""
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    content = "<VirtualHost *:80>\n\n" \
-            + "    Alias /static " + dir_path + "/cashless/static\n" \
-            + "    <Directory " + dir_path + "/cashless/static>\n" \
-            + "        Require all granted\n" \
-            + "    </Directory>\n\n" \
-            + "    <Directory " + dir_path + "/cashlesscards>\n" \
-            + "        <Files wsgi.py>\n" \
-            + "            Require all granted\n" \
-            + "        </Files>\n" \
-            + "    </Directory>\n\n" \
-            + "    WSGIDaemonProcess cashlesscards " \
-            + "python-home=" + dir_path + "/cashlesscardsenv " \
-            + "python-path=" + dir_path + "\n" \
-            + "    WSGIProcessGroup cashlesscards\n" \
-            + "    WSGIScriptAlias / " + dir_path + "/cashlesscards/wsgi.py\n\n" \
-            + "    ErrorLog /var/log/apache2/cashless-error.log\n" \
-            + "    LogLevel warn\n" \
-            + "    CustomLog /var/log/apache2/cashless-access.log combined\n\n" \
-            + "</VirtualHost>"
-    fname = "000-default.conf"
-    fdest = "/etc/apache2/sites-available/000-default.conf"
-    with open(fname, 'w') as f:
-        f.write(content)
-    os.system("sudo mv " + fname + " " + fdest)
-    # configure firewall and check and apply apache config
-    os.system("sudo ufw allow 'Apache Full'")
-    os.system("sudo apache2ctl configtest")
-    os.system("sudo systemctl restart apache2")
+def launch_site():
+    """Start the gunicorn webserver"""
+    try:
+        # set as executable
+        cmd = "sudo chmod +x start.sh"
+        os.system(cmd)
+        # start webserver
+        cmd = "./start.sh"
+        os.system(cmd)
+    except:
+        print("Error starting webserver...")
 
 
 def main():
     """Entry point to program"""
     get_packages()
-    virtual_environment()
     python_packages()
     db, db_user, db_password = configure_mysql()
     setup_credentials(db, db_user, db_password)
     deploy_production()
     setup_custom_settings()
     django_deploy()
-    configure_apache()
     # conclusion
     print("Deployment complete!")
 

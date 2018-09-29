@@ -11,7 +11,7 @@
                     {{ link.voucher.voucher_name }}: {{ link.voucher.voucher_value }}
                 </td>
                 <td>
-                    <a href="{% url 'remove_voucher_link' pk=custom_inst.pk voucher_id=link.voucher_id %}"><button class="w3-button w3-red" target="_blank">Unassign</button></a>
+                    <a href="{% url 'remove_voucher_link' pk=custom_inst.pk voucher_id=link.voucher_id %}"><button class="w3-button w3-dark-grey" target="_blank">Unassign</button></a>
                 </td>
             </tr>
             {% endfor %}

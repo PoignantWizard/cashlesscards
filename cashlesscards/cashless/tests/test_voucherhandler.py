@@ -71,7 +71,7 @@ class ApplyVoucherHandlerTest(TestCase):
         """If customer eligible for a voucher and last voucher issued was yesterday"""
         test_customer = Customer.objects.get(pk=1)
         #test_link = VoucherLink.objects.get(customer_id=test_customer.pk)
-        expected_result = Money(10, customsettings.CURRENCY)
+        expected_result = Money(5, customsettings.CURRENCY)
         apply_voucher(test_customer)
         #self.assertEqual(test_link.last_applied, date.today())
         self.assertEqual(test_customer.cash.voucher_value, expected_result)

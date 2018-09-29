@@ -40,7 +40,51 @@ new". The form has three options:
     all calculations. Currently the system doesn't apply exchange rates to 
     transactions completed in different currencies. 
 
+To view, edit and delete existing vouchers, hover over the "Vouchers" menu button 
+and click "View existing". The page will display a list of vouchers ordered by 
+their name. You can also see their value and application rate. Click on a voucher's 
+name to view this voucher. Here you will see two buttons: "Update" and "Delete". 
+Clicking these will take you to new pages that allow you to edit the voucher details 
+or delete the voucher respectively. Changing or deleting a voucher will impact all 
+customer's that have this voucher assigned to them. 
+
 ### Create and edit customer accounts 
+
+If you have this permission a menu will appear in the top navigation bar with 
+options to create new and view existing customers. 
+
+To create a new customer account, hover over the "Customers" menu button and click 
+"Create new". The form has four options:
+1. First name - this sets the customer's first name. 
+2. Surname - this sets the customer's last name. 
+3. Card number - use a card reader to input the number of the smart ID card. This 
+    is used by the system to find a customer's account and provide transactions. 
+4. Opening balance - you can enter a starting cash balance for a customer here. 
+    The default is set to zero. Any value above zero will be recorded in the 
+    transaction log as this counts as a crediting transaction. 
+
+To view, edit and delete existing customer accounts, hover over the "Customers" 
+menu button and click "View existing". The page will display a list of customers 
+ordered by their surname then first name. You can also see their card number, 
+cash balance and voucher balance. Click on a customer's name to view their account. 
+Here you will see up to five options (depending on your permissions): 
+- "Add cash to account" - conduct a credit transaction 
+- "Deduct cash from account" - conduct a debit transaction 
+- "Update" - edit a customer's details 
+- "Delete" - delete a customer's account. They must have a cash balance of zero
+    else the system won't allow you to remove their account. 
+- "Assign voucher" - assign new vouchers or unassign existing vouchers. It won't 
+    let you assign more than one of the same voucher. 
+
+### Conduct transactions 
+
+
+
+### Assign vouchers to customers
+
+
+
+### Can view transaction log
 
 
 

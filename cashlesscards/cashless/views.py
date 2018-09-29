@@ -58,7 +58,7 @@ def search(request):
         if query:
             results = Customer.objects.get(card_number=query)
             apply_voucher(results)
-            cash_inst = cash_inst = Cash.objects.get(customer_id=results.pk)
+            cash_inst = Cash.objects.get(customer_id=results.pk)
             results.total_balance = cash_inst.cash_value + cash_inst.voucher_value
     except:
         results = None
@@ -340,6 +340,7 @@ class VoucherUpdate(PermissionRequiredMixin, UpdateView):
         'voucher_value'
     ]
     template_name_suffix = '_handler'
+    success_url = reverse_lazy('voucher_list')
 
 
 class VoucherDelete(PermissionRequiredMixin, DeleteView):
@@ -435,6 +436,7 @@ class CustomerUpdate(PermissionRequiredMixin, UpdateView):
         'surname'
     ]
     template_name_suffix = '_handler'
+    success_url = reverse_lazy('customer_list')
 
 
 class CustomerDelete(PermissionRequiredMixin, DeleteView):

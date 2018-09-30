@@ -78,15 +78,45 @@ Here you will see up to five options (depending on your permissions):
 
 ### Conduct transactions 
 
-
+If you have this permission then two buttons will appear when viewing a customer's 
+account. These are: 
+- "Add cash to account" - clicking this will take you to a form that enables you to 
+    credit the customer's account. The value you input will be added to the 
+    customer's overall "cash balance" and will be available for use as soon as you 
+    press the "Submit" button. 
+- "Deduct cash from account" - clicking this will take you to a form that enables 
+    you to debit the customer's account. The value you input will be automatically 
+    deducted from the customer's available voucher balance first, then from their 
+    cash account if the debit is larger than the voucher balance alone. This 
+    process occurs as soon as you press the "Submit" button. 
 
 ### Assign vouchers to customers
 
+If you have this permission then an additional button will appear when viewing a 
+customer's account. This is labelled "Assign voucher". Clicking this will take you 
+to a form that enables you to assign a new voucher to the customer. If the customer 
+already has that voucher assigned to them, then the form won't allow you to assign 
+it again. 
 
+The form will also list any assigned vouchers and their value. Next to each voucher 
+there's a button labelled "Unassign". Clicking this opens a confirmation box and, if 
+you select "Yes", remove it from the customer's account. Any voucher balance already 
+claimed today will remain until deducted. 
 
 ### Can view transaction log
 
+If you have this permission then a menu button will appear in the top navigation bar 
+labelled "Activity log". Clicking this takes you to the transaction log page. This 
+displays all the transactions that have occured in the last month. The fields 
+included are: 
+- Customer - displays the customer's name as surname, first name 
+- Time - gives the date and time of the transaction 
+- Type - shows whether the transaction was a credit or a debit 
+- Cash value - shows how much of the customer's cash balance was affected 
+- Voucher value - shows how much of the customer's voucher balance was affected 
 
+The page also has a button labelled "Download CSV". Clicking this allows you to 
+download a CSV file of the current transaction log. 
 
 ## Search
 
@@ -106,8 +136,8 @@ a terminal for customer's to check their own details.
 
 If you have permission to conduct transactions, two buttons will also appear 
 on this view. These take you to forms that allow you to credit and debit the 
-customer's account respectively. 
-
+customer's account respectively. Other buttons may also appear depending on 
+your permissions. See the [permissions section](#Permissions). 
 
 ## Customers
 

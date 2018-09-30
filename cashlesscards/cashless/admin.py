@@ -11,6 +11,7 @@ class CashInline(admin.StackedInline):
 class VoucherLinkInline(admin.StackedInline):
     """Customises the list of vouchers when inline"""
     model = VoucherLink
+    exclude = ["voucher_value"]
     extra = 0
 
 

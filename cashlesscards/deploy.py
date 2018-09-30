@@ -171,7 +171,8 @@ def launch_site():
         cmd = "sudo chmod +x start.sh"
         os.system(cmd)
         # start webserver
-        cmd = "./start.sh"
+        print("Launching webserver")
+        cmd = "./start.sh &"
         os.system(cmd)
     except:
         print("Error starting webserver...")
@@ -188,6 +189,7 @@ def main():
     django_deploy()
     # conclusion
     print("Deployment complete!")
+    launch_site()
 
 
 if __name__ == '__main__':

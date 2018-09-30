@@ -4,7 +4,7 @@ from djmoney.money import Money
 
 from cashless import customsettings
 from cashless.models import Voucher, Customer, Cash, VoucherLink
-from cashless.voucherhandler import apply_voucher, debit_voucher
+from cashless.voucherhandler import apply_voucher, debit_voucher, distribute_voucher_debit
 
 
 class ApplyVoucherHandlerTest(TestCase):
@@ -51,11 +51,13 @@ class ApplyVoucherHandlerTest(TestCase):
             customer_id=1,
             voucher_id=1,
             last_applied=date.today()-timedelta(days=1), # yesterday
+            voucher_value=Money(5, customsettings.CURRENCY),
         )
         test_link3 = VoucherLink.objects.create(
             customer_id=3,
             voucher_id=1,
             last_applied=date.today(),
+            voucher_value=Money(5, customsettings.CURRENCY),
         )
         test_customer1.save()
         test_cash1.save()
@@ -103,7 +105,14 @@ class DebitVoucherTest(TestCase):
             cash_value=Money(2, customsettings.CURRENCY),
             voucher_value=Money(5, customsettings.CURRENCY),
         )
+        test_link1 = VoucherLink.objects.create(
+            customer_id=1,
+            voucher_id=1,
+            last_applied=date.today(),
+            voucher_value=Money(5, customsettings.CURRENCY),
+        )
         test_cash1.save()
+        test_link1.save()
 
     def test_value_more_than_voucher(self):
         """If the value to deduct is more than voucher"""
@@ -155,3 +164,76 @@ class DebitVoucherTest(TestCase):
         self.assertEqual(cash.voucher_value, expected_voucher_value)
         self.assertEqual(voucher_debit, expected_voucher_debit)
         self.assertEqual(cash_debit, expected_cash_debit)
+
+
+class DistributeVoucherDebitTest(TestCase):
+    """Tests the distribute voucher debit function"""
+    def setUp(self):
+        """Set up non-modified objects used by all test methods"""
+        test_cash = Cash.objects.create(
+            customer_id=1,
+            cash_value=Money(2, customsettings.CURRENCY),
+            voucher_value=Money(10, customsettings.CURRENCY),
+        )
+        test_link1 = VoucherLink.objects.create(
+            customer_id=1,
+            voucher_id=1,
+            last_applied=date.today(),
+            voucher_value=Money(5, customsettings.CURRENCY),
+        )
+        test_link2 = VoucherLink.objects.create(
+            customer_id=1,
+            voucher_id=2,
+            last_applied=date.today(),
+            voucher_value=Money(5, customsettings.CURRENCY),
+        )
+        test_cash.save()
+        test_link1.save()
+        test_link2.save()
+
+    def test_value_more_than_both_vouchers(self):
+        """If the value to deduct is more than both vouchers"""
+        # run preparation
+        test_cash = Cash.objects.get(pk=1)
+        test_value = Money(15, customsettings.CURRENCY)
+        expected_link_value = Money(0, customsettings.CURRENCY)
+        # run function
+        distribute_voucher_debit(test_cash, test_value)
+        # get linked vouchers
+        test_link1 = VoucherLink.objects.get(customer_id=1, voucher_id=1)
+        test_link2 = VoucherLink.objects.get(customer_id=1, voucher_id=2)
+        # test output
+        self.assertEqual(test_link1.voucher_value, expected_link_value)
+        self.assertEqual(test_link2.voucher_value, expected_link_value)
+
+    def test_value_less_than_both_vouchers(self):
+        """If the value to deduct is less than both vouchers"""
+        # run preparation
+        test_cash = Cash.objects.get(pk=1)
+        test_value = Money(2, customsettings.CURRENCY)
+        expected_link_value1 = Money(3, customsettings.CURRENCY)
+        expected_link_value2 = Money(5, customsettings.CURRENCY)
+        # run function
+        distribute_voucher_debit(test_cash, test_value)
+        # get linked vouchers
+        test_link1 = VoucherLink.objects.get(customer_id=1, voucher_id=1)
+        test_link2 = VoucherLink.objects.get(customer_id=1, voucher_id=2)
+        # test output
+        self.assertEqual(test_link1.voucher_value, expected_link_value1)
+        self.assertEqual(test_link2.voucher_value, expected_link_value2)
+
+    def test_value_more_than_one_voucher_less_than_other(self):
+        """If the value to deduct is less than both vouchers"""
+        # run preparation
+        test_cash = Cash.objects.get(pk=1)
+        test_value = Money(6, customsettings.CURRENCY)
+        expected_link_value1 = Money(0, customsettings.CURRENCY)
+        expected_link_value2 = Money(4, customsettings.CURRENCY)
+        # run function
+        distribute_voucher_debit(test_cash, test_value)
+        # get linked vouchers
+        test_link1 = VoucherLink.objects.get(customer_id=1, voucher_id=1)
+        test_link2 = VoucherLink.objects.get(customer_id=1, voucher_id=2)
+        # test output
+        self.assertEqual(test_link1.voucher_value, expected_link_value1)
+        self.assertEqual(test_link2.voucher_value, expected_link_value2)

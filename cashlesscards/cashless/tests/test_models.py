@@ -137,6 +137,7 @@ class VoucherLinkModelTest(TestCase):
             customer_id=1,
             voucher_id=1,
             last_applied=datetime.date.today(),
+            voucher_value=Money(5, customsettings.CURRENCY),
         )
 
     def test_last_applied(self):
@@ -144,6 +145,12 @@ class VoucherLinkModelTest(TestCase):
         link = VoucherLink.objects.get(id=1)
         today = datetime.date.today()
         self.assertEqual(today, link.last_applied)
+
+    def test_voucher_value_max_digits(self):
+        """The maximum number of digits in the voucher value is as expected"""
+        balance = VoucherLink.objects.get(id=1)
+        max_digits = balance._meta.get_field('voucher_value').max_digits
+        self.assertEqual(max_digits, 14)
 
 
 class TransactionModelTest(TestCase):

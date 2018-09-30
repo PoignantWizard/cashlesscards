@@ -103,6 +103,12 @@ class VoucherLink(models.Model):
     last_year = datetime.datetime.now() - datetime.timedelta(days=365)
 
     last_applied = models.DateField(default=last_year)
+    voucher_value = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency=customsettings.CURRENCY,
+        default=0,
+    )
 
     class Meta:
         """Declare model-level metadata"""

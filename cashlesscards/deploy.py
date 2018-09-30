@@ -171,9 +171,13 @@ def launch_site():
         cmd = "sudo chmod +x start.sh"
         os.system(cmd)
         # start webserver
-        print("Launching webserver")
-        cmd = "./start.sh &"
-        os.system(cmd)
+        start = input("Do you want to start the webserver now? (y/n) ")
+        if start == "Y" or start == "y" or start == "Yes" or start == "yes":
+            print("Launching webserver")
+            cmd = "./start.sh &"
+            os.system(cmd)
+        else:
+            print("Webserver ready. To start run ./start.sh")
     except:
         print("Error starting webserver...")
 

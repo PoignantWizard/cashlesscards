@@ -1,13 +1,28 @@
 # Cashless cards system
 
-Congratulations on choosing Cashless cards as your internal transaction  
+Congratulations on choosing "Cashless cards" as your internal transaction  
 system. Its a clean, lightweight web application designed to provide a 
 cashless service in a "closed" environment, such as offices, clinics, and 
 schools, using NFC capable ID cards or an otherwise unique customer number. 
 
 ## Set up
 
+We recommend copying the cashlesscards project folder to an ubuntu server for 
+best results. It can also run from other linux or windows machines, however 
+we've not tested as thoroughly on these. As such, we haven't developed an 
+automated deployment programme for these. If you wish to run from a windows 
+machine or non-debian based linux machine, please see the Django documentation 
+for deploying on your environment. 
 
+The easiest way to set up and begin using the system on a debian based linux 
+machine is to run deploy.py. You can do this by navigating the the cashlesscards 
+project folder and typing "python3 deploy.py" into the command line. This will 
+walk you through the installation and setup of the necessary dependancies. Once 
+complete, it will ask you whether you want to start the webserver. If you enter 
+"y", then it will start and you can begin viewing and using the system. 
+
+If this has been successful, visit the admin page to setup your permission 
+groups and users. See the [permissions section](#Permissions) for more details. 
 
 ## Permissions
 
@@ -23,7 +38,7 @@ The permissions used by cashless cards are:
 - Assign vouchers to customers
 - Can view transaction log
 
-### Create abd edit vouchers
+### Create and edit vouchers
 
 If you have this permission, then a menu will appear in the top navigation bar 
 with options to create new and view existing vouchers. 

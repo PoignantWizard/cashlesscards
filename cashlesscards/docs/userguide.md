@@ -27,9 +27,9 @@ groups and users. See the [permissions section](#Permissions) for more details.
 ## Permissions
 
 The system limits certain functionality based on a user's permissions. These 
-can be assigned at the individual user level or at group. We strongly 
-recommend working at the group level as we've found it much easier to manage 
-this way. 
+can be assigned at the individual user level or at group using the system's 
+[admin](#Admin) facility. We strongly recommend working at the group level as 
+we've found it much easier to manage this way. 
 
 The permissions used by cashless cards are: 
 - Create and edit vouchers
@@ -266,3 +266,33 @@ month. The fields included are:
 
 The page also has a button labelled "Download CSV". Clicking this allows you to 
 download a CSV file of the current transaction log. 
+
+## Admin
+
+If you're a superuser, then you'll be able to access the system's admin facility. 
+Click the "Admin" menu button to find it. This is split into two main sections: 
+1. Authentication and Authorization
+2. Cashless
+
+### Authentication and Authorization
+This section allows you to create, edit and remove users and permisssion groups. 
+We strongly recommend working at the group level for assigning persmissions as 
+we've found it much easier to manage this way. For more information, see the 
+[permissions section](#Permissions). 
+
+User accounts can then be assigned to a group and will inherit the group's 
+permissions. They can be easily removed from a group if they no longer require 
+those permissions. If the permissions are changed at group level then all members 
+of that group will have their permissions changed to relect this automatically. 
+
+### Cashless
+
+This section allows you to see the data held about customers, their accounts and 
+vouchers. You're also able to edit data here, which is useful for correcting any 
+issues that may occur during use of the system. 
+
+Note that any restrictions enforced by the main site's forms will not be enforced 
+here so you risk introducing strange or incompatible data. We strongly recommend 
+using the site's forms for any record creation or modification. Any adjustments to 
+cash and voucher balances on a customer's account will also not be recorded in the 
+transaction log, which may cause issues with any reporting or monitoring that you do. 

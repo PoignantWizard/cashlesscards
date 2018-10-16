@@ -96,10 +96,7 @@ def setup_credentials(db, db_user, db_password):
 def deploy_production():
     """Deploy production settings"""
     set_old_prod = "cashlesscards/settings_production.py"
-    set_dev = "cashlesscards/settings_development.py"
     set_prod = "cashlesscards/settings.py"
-    if os.path.isfile(set_prod) and os.path.isfile(set_old_prod):
-        os.rename(set_prod, set_dev)
     if os.path.isfile(set_old_prod):
         os.rename(set_old_prod, set_prod)
 

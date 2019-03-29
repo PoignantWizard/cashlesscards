@@ -128,7 +128,8 @@ class ActivityLogViewTest(TestCase):
         """The view will redirect if the user doesn't have permisssions"""
         self.client.login(username='testuser2', password='2HJ1vRV0Z&3iD')
         response = self.client.get(reverse('activity_log'))
-        self.assertRedirects(response, '/accounts/login/?next=/cashless/log')
+        #self.assertRedirects(response, '/accounts/login/?next=/cashless/log')
+        self.assertEqual(response.status_code, 403)
 
     def test_logged_in_uses_correct_template(self):
         """The page is displayed for a logged in user with permission"""

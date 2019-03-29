@@ -18,6 +18,7 @@ from .forms import AddCashForm, DeductCashForm
 from .forms import AddVoucherLinkForm, RemoveVoucherLinkForm
 from .forms import CreateNewVoucherForm, CreateNewCustomerForm
 from .voucherhandler import apply_voucher, debit_voucher
+from .updates import check_current_version
 
 
 def index(request):
@@ -32,11 +33,22 @@ def info(request):
     num_customers = Customer.objects.all().count()
     num_cash = Cash.objects.all().count()
 
-    # Total cash held in system
+    # Total cash held in system set to correct format
     sum_cash = Cash.objects.aggregate(Sum('cash_value'))['cash_value__sum']
+    sum_cash = str("{:.2f}".format(sum_cash))
+
+    # check current version if possible
+    try:
+        version_match, git_version = check_current_version()
+        update_message = "Version " + str(git_version) + " is available."
+    except:
+        version_match = False
+        update_message = "Unable to check for updates."
 
     context = {
         'version': customsettings.VERSION,
+        'version_match': version_match,
+        'update_message': update_message,
         'num_customers': num_customers,
         'num_cash': num_cash,
         'sum_cash': sum_cash,

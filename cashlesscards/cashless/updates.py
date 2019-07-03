@@ -7,7 +7,7 @@ def check_current_version():
     Compares local version to github to check
     whether the latest version is in use
     """
-    url = "https://raw.githubusercontent.com/PoignantWizard/" \
+    url = "https://raw.githubusercontent.com/zakwarren/" \
         + "cashlesscards/master/cashlesscards/cashless/customsettings.py"
     content = urllib.request.urlopen(url)
 

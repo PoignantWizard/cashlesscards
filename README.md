@@ -71,7 +71,7 @@ This app is written in python 3.6 using the django framework version 2.0.7.
 
 ## Authors
 
-* **zakwarren** - *Initial work*
+- **zakwarren** - *Initial work*
 
 ## License
 

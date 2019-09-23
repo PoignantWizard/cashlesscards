@@ -11,7 +11,9 @@
                     {{ link.voucher.voucher_name }}: {{ link.voucher.voucher_value }}
                 </td>
                 <td>
-                    <a href="{% url 'remove_voucher_link' pk=custom_inst.pk voucher_id=link.voucher_id %}"><button class="w3-button w3-dark-grey" target="_blank">Unassign</button></a>
+                    <a href="{% url 'remove_voucher_link' pk=custom_inst.pk voucher_id=link.voucher_id %}">
+                        <button class="content-button" target="_blank">Unassign</button>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
@@ -25,10 +27,12 @@
             <table>
             {{ form }}
             </table>
-            <p><input class="w3-button w3-dark-grey" type="submit" value="Submit" /></p>
+            <p><input class="content-button" type="submit" value="Submit" /></p>
         </form>
     </div>
-        <p><a href="{% url 'index' %}"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a></p>
+        <p>
+            <a href="{% url 'index' %}"><button class="content-button" target="_blank">Search with another card</button></a>
+        </p>
 
 
 {% endblock %}

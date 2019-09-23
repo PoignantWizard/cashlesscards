@@ -1,5 +1,127 @@
-body,h1,h2,h3,h4,h5,h6 {
-    font-family: "Raleway", Arial, Helvetica, sans-serif
+* {
+    box-sizing: border-box;
+    font-family: "Raleway", Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+div,
+a,
+button,
+p {
+    font-size: 1.1vw;
+}
+
+h1 {
+    font-size: 2vw;
+}
+
+h2 {
+    font-size: 1.6vw;
+}
+
+h3 {
+    font-size: 1.4vw;
+}
+
+.top-nav__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+    font-size: 1.2vw;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.top-nav__list-item a {
+    display: block;
+    color: #9c9c9c;
+    text-align: center;
+    padding: 1vw 1.2vw;
+    text-decoration: none;
+}
+
+.logo {
+    background-color: #cc0000;
+}
+
+.logo a {
+    color: white;
+}
+
+.login {
+    margin-left: auto;
+    margin-right: 0;
+    justify-self: right;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+}
+
+.top-nav__list-item a:hover {
+    background-color: #cc0000;
+    color: white;
+}
+
+.top-nav__drop-down {
+    background-color: white;
+    border: none;
+    color: #9c9c9c;
+    padding: 1vw 1.2vw;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.top-nav__drop-down:hover {
+    background-color: #cc0000;
+    color: white;
+}
+
+.top-nav__drop-items {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.top-nav__drop-items a {
+    color: black;
+    padding: 1vw 1.2vw;
+    text-decoration: none;
+    display: block;
+}
+
+.top-nav__drop-items a:hover {
+      background-color: #cc0000;
+}
+
+.top-nav__drop-down:hover .top-nav__drop-items {
+    display: block;
+}
+
+@media (max-width: 800px) {
+    .top-nav__list {
+        flex-direction: column;
+    }
+
+    .login {
+        margin-right: auto;
+    }
+
+    .top-nav__drop-down:hover .top-nav__drop-items {
+        width: 90%;
+        left: 5%;
+    }
 }
 
 .sidebar-nav {
@@ -8,7 +130,77 @@ body,h1,h2,h3,h4,h5,h6 {
     list-style: none;
 }
 
+.landing-img {
+    background-image: url("homeBackground.jpg");
+    height: 100%;
+    min-height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.content-box {
+    width: 60%;
+    padding: 0.2vw;
+    background-color: white;
+    color: black;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.content-button,
+.content-button__page {
+    background-color: #616161;
+    border: none;
+    color: white;
+    font-size: 1vw;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.content-button:hover,
+.content-button__page:hover {
+    background-color: #a00000;
+}
+
+.content-button {
+    padding: 1vw 1.2vw;
+}
+
+.content-button__page {
+    padding: 0.5vw 0.8vw;
+}
+
+.content-form {
+    width: 90%;
+}
+
+input[type=text],
+input[type=number],
+input[type=password],
+input[type=email] {
+    padding: 1vw 1.2vw;
+    margin: 0.6vw 0;
+    display: inline-block;
+    border: 0.1vw solid #cc0000;
+    border-radius: 0.2vw;
+}
+
+select {
+    padding: 1vw 1.2vw;
+    margin: 0.6vw 0;
+    display: inline-block;
+    border-radius: 0.4vw;
+}
+
 table {
+    max-height: 90%;
     border-collapse: collapse;
     width: 100%;
 }
@@ -26,9 +218,28 @@ tr:nth-child(even){background-color: #f2f2f2;}
 }
 
 th {
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 0.3vw;
+    padding-bottom: 0.3vw;
     text-align: left;
     background-color: #cc0000;
     color: white;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.info-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 1vw 1.2vw;
+    width: 100%;
+    text-align: center;
+}
+
+.footer-link:hover {
+    color: #cc0000;
 }

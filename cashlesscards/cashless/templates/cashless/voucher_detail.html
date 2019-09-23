@@ -3,23 +3,23 @@
 {% block content %}
 
   <h3>{{ voucher.voucher_name }} details</h3>
-      <div class="w3-row-padding" style="margin:0 -16px;">
-        <div class="w3-full">
-            <p>Voucher application rate: {{ voucher.voucher_application }}</p>
-            <p>Voucher value: {{ voucher.voucher_value }}</p>
-            <br />
-            <p>
-              {% if perms.cashless.can_add_vouchers %}
-                <a href="{% url 'update_voucher' voucher.pk %}">
-                  <button class="w3-button w3-dark-grey" target="_blank">Update</button>
-                </a>
-                <a href="{% url 'delete_voucher' voucher.pk %}">
-                    <button class="w3-button w3-dark-grey" target="_blank">Delete</button>
-                </a>
-              {% endif %}
-              <a href="{% url 'voucher_list' %}"><button class="w3-button w3-dark-grey" target="_blank">Find another voucher</button></a>
-            </p>
-        </div>
+      <div class="content-inner" style="margin:0 -16px;">
+          <p>Voucher application rate: {{ voucher.voucher_application }}</p>
+          <p>Voucher value: {{ voucher.voucher_value }}</p>
+          <br />
+          <p>
+            {% if perms.cashless.can_add_vouchers %}
+              <a href="{% url 'update_voucher' voucher.pk %}">
+                <button class="content-button" target="_blank">Update</button>
+              </a>
+              <a href="{% url 'delete_voucher' voucher.pk %}">
+                  <button class="content-button" target="_blank">Delete</button>
+              </a>
+            {% endif %}
+            <a href="{% url 'voucher_list' %}">
+              <button class="content-button" target="_blank">Find another voucher</button>
+            </a>
+          </p>
       </div>
 
 {% endblock %}

@@ -3,9 +3,13 @@
 {% block content %}
 
 <h1>Vouchers</h1>
-<p><a href="{% url 'create_new_voucher' %}"><button class="w3-button w3-dark-grey" target="_blank">Create a new voucher</button></a></p>
+<p>
+    <a href="{% url 'create_new_voucher' %}">
+        <button class="content-button" target="_blank">Create a new voucher</button>
+    </a>
+</p>
 {% if voucher_list %}
-<div class="w3-responsive">
+<div class="content-inner">
     <table>
         <tr>
             <th>Application rate</th>

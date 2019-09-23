@@ -15,7 +15,7 @@
     {% endif %}
   {% endif %}
 
-  <div class="w3-responsive">
+  <div class="content-inner">
     <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
 
@@ -31,7 +31,7 @@
     </table>
 
     <div>
-      <input class="w3-button w3-dark-grey" type="submit" value="Login" />
+      <input class="content-button" type="submit" value="Login" />
       <input type="hidden" name="next" value="{{ next }}" />
     </div>
 
@@ -39,7 +39,7 @@
 </div>
 
   {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="{% url 'password_reset' %}"><button class="w3-button w3-dark-grey" target="_blank">Lost password?</button></a></p>
+  <p><a href="{% url 'password_reset' %}"><button class="content-button" target="_blank">Lost password?</button></a></p>
 
 
 {% endblock %}

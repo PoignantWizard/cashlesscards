@@ -5,50 +5,46 @@
 {% if results %}
 
      <h3>{{ results.first_name }} {{ results.surname }}'s account details</h3>
-      <div class="w3-row-padding" style="margin:0 -16px;">
-        <div class="w3-full">
-          <p>Voucher value: {{ results.cash.voucher_value }}</p>
-          <p>Cash balance: {{ results.cash.cash_value }} </p>
-          <p><strong>Total balance: {{ results.total_balance }}</strong></p>
-          <br />
-          <p>
-            {% if perms.cashless.can_transact %}
-              <a href="{% url 'add_cash_cashier' results.pk %}">
-                <button class="w3-button w3-dark-grey" target="_blank">Add cash to account</button>
-              </a>
-              <a href="{% url 'deduct_cash_cashier' results.pk %}">
-                <button class="w3-button w3-dark-grey" target="_blank">Deduct cash from account</button>
-              </a>
-            {% endif %}
-            {% if perms.cashless.can_add_customers %}
-              <a href="{% url 'update_customer' results.pk %}">
-                <button class="w3-button w3-dark-grey" target="_blank">Update</button>
-              </a>
-              <a href="{% url 'delete_customer' results.pk %}">
-                  <button class="w3-button w3-dark-grey" target="_blank">Delete</button>
-              </a>
-            {% endif %}
-            {% if perms.cashless.can_assign_voucher %}
-              <a href="{% url 'add_voucher_link' results.pk %}">
-                <button class="w3-button w3-dark-grey" target="_blank">Assign voucher</button>
-              </a>
+      <div class="content-inner" style="margin:0 -16px;">
+        <p>Voucher value: {{ results.cash.voucher_value }}</p>
+        <p>Cash balance: {{ results.cash.cash_value }} </p>
+        <p><strong>Total balance: {{ results.total_balance }}</strong></p>
+        <br />
+        <p>
+          {% if perms.cashless.can_transact %}
+            <a href="{% url 'add_cash_cashier' results.pk %}">
+              <button class="content-button" target="_blank">Add cash to account</button>
+            </a>
+            <a href="{% url 'deduct_cash_cashier' results.pk %}">
+              <button class="content-button" target="_blank">Deduct cash from account</button>
+            </a>
           {% endif %}
-            </p>
-            <p><a href="/"><button class="w3-button w3-dark-grey" target="_blank">Search with another card</button></a></p>
-        </div>
+          {% if perms.cashless.can_add_customers %}
+            <a href="{% url 'update_customer' results.pk %}">
+              <button class="content-button" target="_blank">Update</button>
+            </a>
+            <a href="{% url 'delete_customer' results.pk %}">
+                <button class="content-button" target="_blank">Delete</button>
+            </a>
+          {% endif %}
+          {% if perms.cashless.can_assign_voucher %}
+            <a href="{% url 'add_voucher_link' results.pk %}">
+              <button class="content-button" target="_blank">Assign voucher</button>
+            </a>
+        {% endif %}
+          </p>
+          <p><a href="/"><button class="content-button" target="_blank">Search with another card</button></a></p>
       </div>
 
 {% else %}
     <!-- Search box -->
     <h3 class='error'>Please enter a valid card number</h3>
-    <div class="w3-row-padding" style="margin:0 -16px;">
-      <div class="w3-full">
-        <label>ID card number</label>
-        <form method="get" action="/cashless/search">
-          <input class="w3-input w3-border" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
-          <p><input class="w3-button w3-dark-grey" type="submit" value="Find cash balance" /></p>
-        </form>
-      </div>
+    <div class="content-inner" style="margin:0 -16px;">
+      <label>ID card number</label>
+      <form method="get" action="/cashless/search">
+        <input class="content-form" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
+        <p><input class="content-button" type="submit" value="Find cash balance" /></p>
+      </form>
     </div>
 
 {% endif %}

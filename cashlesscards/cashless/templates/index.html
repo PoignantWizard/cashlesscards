@@ -5,14 +5,12 @@
 
   <!-- Search box -->
     <h3>Cashless Cards Home</h3>
-    <div class="w3-row-padding" style="margin:0 -16px;">
-      <div class="w3-full">
+      <div class="content__provided">
         <label>ID card number</label>
         <form method="get" action="/cashless/search/">
-          <input class="w3-input w3-border" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
-          <p><input class="w3-button w3-dark-grey" type="submit" value="Find cash balance" /></p>
+          <input class="content-form" type="text" placeholder="ID card number" name="q" id="id_q" value="{{ query }}"/>
+          <p><input class="content-button" type="submit" value="Find cash balance" /></p>
         </form>
       </div>
-    </div>
 
 {% endblock %}

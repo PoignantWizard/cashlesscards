@@ -11,8 +11,15 @@
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
     
     <style>
-        body,h1,h2,h3,h4,h5,h6 {
+        * {
+            box-sizing: border-box;
             font-family: "Raleway", Arial, Helvetica, sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
         }
 
         #header {

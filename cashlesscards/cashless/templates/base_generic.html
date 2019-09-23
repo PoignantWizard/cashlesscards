@@ -4,7 +4,6 @@
         {% block title %}<title>Cashless Cards</title>{% endblock %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -18,82 +17,98 @@
 
 <!-- Navigation bar -->
 {% block topbar %}
-<div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-  <a href="/" class="w3-bar-item w3-button w3-text-red w3-hover-red w3-mobile"><b><i class="fa fa-id-card w3-margin-right"></i>Cashless Cards</b></a>
-  
-    {% if user.is_authenticated %}
-        <a href="{% url 'info' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Info</a>
+<nav class="top-nav">
+    <ul class="top-nav__list">
+        <li class="top-nav__list-item logo">
+            <a href="/" class=""><b><i class="fa fa-id-card"></i> Cashless Cards</b></a>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="top-nav__list-item">
+            <a href="{% url 'info' %}" class="">Info</a>
+        </li>
         {% if perms.cashless.can_add_customers %}
-          <div class="w3-dropdown-hover w3-mobile">
-            <button class="w3-button">Customers <i class="fa fa-caret-down"></i></button>
-            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-              <a href="{% url 'create_new_customer' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Create new</a>
-              <a href="{% url 'customer_list' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">View existing</a>
-            </div>
-          </div>
+        <li class="top-nav__list-item">
+            <button class="top-nav__drop-down">Customers <i class="fa fa-caret-down"></i>
+                <div class="top-nav__drop-items">
+                    <a href="{% url 'create_new_customer' %}" class="">Create new</a>
+                    <a href="{% url 'customer_list' %}" class="">View existing</a>
+                </div>
+            </button>
+        </li>
         {% endif %}
         {% if perms.cashless.can_add_vouchers %}
-          <div class="w3-dropdown-hover w3-mobile">
-            <button class="w3-button">Vouchers <i class="fa fa-caret-down"></i></button>
-            <div class="w3-dropdown-content w3-bar-block w3-card-4">
-              <a href="{% url 'create_new_voucher' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Create new</a>
-              <a href="{% url 'voucher_list' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">View existing</a>
-            </div>
-          </div>
+        <li class="top-nav__list-item">
+            <button class="top-nav__drop-down">Vouchers <i class="fa fa-caret-down"></i>
+                <div class="top-nav__drop-items">
+                    <a href="{% url 'create_new_voucher' %}" class="">Create new</a>
+                    <a href="{% url 'voucher_list' %}" class="">View existing</a>
+                </div>
+            </button>
+        </li>
         {% endif %}
         {% if perms.cashless.view_finance %}
-          <a href="{% url 'activity_log' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Activity log</a>
+        <li class="top-nav__list-item"><a href="{% url 'activity_log' %}" class="">Activity log</a></li>
         {% endif %}
         {% if request.user.is_superuser %}
-          <a href="{% url 'admin:index' %}" class="w3-bar-item w3-button w3-text-grey w3-hover-red w3-mobile">Admin</a>
+        <li class="top-nav__list-item"><a href="{% url 'admin:index' %}" class="">Admin</a></li>
         {% endif %}
-        <a href="{% url 'logout'%}?next=/" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey w3-mobile">Logout</a>
-        <div class="w3-bar-item w3-right w3-text-grey w3-mobile">
-          <i class="fa fa-user"></i>
-          User: {{ user.get_username }}
+        <div class="top-nav__list-item login">
+            <a>
+              <i class="fa fa-user"></i>
+              User: {{ user.get_username }}
+            </a>
+            <a href="{% url 'logout'%}?next=/">Logout</a>
         </div>
-    {% else %}
-        <a href="{% url 'login'%}?next=/" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey w3-mobile">Login</a>
-    {% endif %}
-</div>
+        {% else %}
+        <div class="top-nav__list-item login">
+          <a href="{% url 'login'%}?next=/">Login</a>
+        </div>
+        {% endif %}
+    </ul>
+</nav>
 {% endblock %}
 
 <!-- Main contect section of page -->
-<div class="col-sm-10 ">
-  <!-- Header -->
-  <header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
-      <img class="w3-image" src="{% static 'homeBackground.jpg' %}" alt="Meal" width="1500" height="500">
-      <div class="w3-display-middle" style="width:50%">
-        
-      <div id="content" class="w3-container w3-white w3-padding-16 myLink">
-        {% block content %}{% endblock %}
-              {% block pagination %}
-                {% if is_paginated %}
-                  <div class="pagination" align="right">
-                    <p><span class="page-links">
-                      {% if page_obj.has_previous %}
-                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}"><button class="w3-button w3-dark-grey" target="_blank">Previous</button></a>
-                      {% endif %}
-                      <span class="page-current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} 
-                      </span>
-                      {% if page_obj.has_next %}
-                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}"><button class="w3-button w3-dark-grey" target="_blank">Next</button></a>
-                      {% endif %}
-                    </span></p>
-                  </div>
-                {% endif %}
-              {% endblock %} 
-      </div>
-      </div>
-      
-      </div>
-  </header>
+<div class="landing-img">
+  <!-- Main content box -->
+  <main class="content-box">
+    <div id="content" class="myLink">
+      {% block content %}{% endblock %}
+            {% block pagination %}
+              {% if is_paginated %}
+                <div class="pagination" align="right">
+                  <p><span class="page-links">
+                    {% if page_obj.has_previous %}
+                      <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">
+                        <button class="content-button__page" target="_blank">Previous</button>
+                      </a>
+                    {% endif %}
+                    <span class="page-current">
+                      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} 
+                    </span>
+                    {% if page_obj.has_next %}
+                      <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">
+                        <button class="content-button__page" target="_blank">Next</button>
+                      </a>
+                    {% endif %}
+                  </span></p>
+                </div>
+              {% endif %}
+            {% endblock %} 
+    </div>
+  </main>
+</div>
 
 <!-- Footer -->
 {% block footer %}
-<footer class="w3-container w3-center w3-opacity w3-margin-bottom">
-  <p>A website developed by <a href="https://github.com/zakwarren" target="_blank" class="w3-hover-text-green"><em>Zak Warren</em>! <i class="fa fa-github w3-hover-opacity"></i></a></p>
+<footer class="footer">
+  <p class="footer-text">
+    A website developed by 
+    <a href="https://github.com/zakwarren" target="_blank" class="footer-link">
+      <em>Zak Warren</em>! 
+      <i class="fa fa-github"></i>
+    </a>
+  </p>
 </footer>
 {% endblock %}
 

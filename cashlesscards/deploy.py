@@ -6,20 +6,6 @@ import getpass
 SYSTEM_VERSION = 1.0
 
 
-def get_packages():
-    """Get required packages"""
-    os.system("sudo apt-get update")
-    packages = "sudo apt-get install " \
-            + "python3-pip python3-dev python-mysqldb mysql-server libmysqlclient-dev "
-    os.system(packages)
-
-
-def python_packages():
-    """Activate virtual environment and install required python packages"""
-    cmd = "pip3 install -r requirements.txt"
-    os.system(cmd)
-
-
 def configure_mysql():
     """Set up MySQL database"""
     os.system("mysql_secure_installation")
@@ -72,6 +58,8 @@ def setup_credentials(db, db_user, db_password):
             hosts.append(host)
         else:
             break
+    if hosts == []:
+        hosts = ['*']
 
     contents = '"""\n' \
         + "Credentials required by in the cashless cards project\n" \
@@ -181,8 +169,6 @@ def launch_site():
 
 def main():
     """Entry point to program"""
-    get_packages()
-    python_packages()
     db, db_user, db_password = configure_mysql()
     setup_credentials(db, db_user, db_password)
     deploy_production()

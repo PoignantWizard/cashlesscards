@@ -15,9 +15,11 @@ machine or non-debian based linux machine, please see the Django documentation
 for deploying on your environment.
 
 The easiest way to set up and begin using the system on a debian based linux
-machine is to run deploy.py. You can do this by navigating to the cashlesscards
-project folder and typing "python3 deploy.py" into the command line. This will
-walk you through the installation and setup of the necessary dependancies. Once
+machine is to run installdependencies.py followed by deploy.py. You can do this
+by navigating to the cashlesscards project folder and typing
+"python3 installdependencies.py" into the command line and once that is complete
+enter "python3 deploy.py". These will walk you through the installation and setup
+of the necessary dependancies and the configuration of your instance. Once
 complete, it will ask you whether you want to start the webserver. If you enter
 "y", then it will start and you can begin viewing and using the system.
 

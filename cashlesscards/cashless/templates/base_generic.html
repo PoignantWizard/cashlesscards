@@ -19,8 +19,14 @@
 {% block topbar %}
 <nav class="top-nav">
     <ul class="top-nav__list">
-        <li class="top-nav__list-item logo">
-            <a href="/" class=""><b><i class="fa fa-id-card"></i> Cashless Cards</b></a>
+        <li class="top-nav__list-item top-nav__responsive">
+            <div class="logo">
+              <a href="/" class=""><b><i class="fa fa-id-card"></i> Cashless Cards</b></a>
+            </div>
+            <div class="top-nav__buttons">
+                <span class="top-nav__open-button" onclick="openNav()">&#9776;</span>
+                <span class="top-nav__close-button" onclick="closeNav()">&times;</span>
+            </div>
         </li>
         {% if user.is_authenticated %}
         <li class="top-nav__list-item">
@@ -111,6 +117,28 @@
   </p>
 </footer>
 {% endblock %}
+
+<script>
+  const navItems = document.getElementsByClassName("top-nav__list-item");
+  const openButton = document.getElementsByClassName("top-nav__open-button")[0];
+  const closeButton = document.getElementsByClassName("top-nav__close-button")[0];
+
+  function openNav() {
+    for (let i = 0; i < navItems.length; i++) {
+      navItems[i].style.display = "block";
+    }
+    openButton.style.display = "none";
+    closeButton.style.display = "block";
+  }
+
+  function closeNav() {
+    for (let i = 0; i < navItems.length; i++) {
+      navItems[i].removeAttribute("style");
+    }
+    openButton.removeAttribute("style");
+    closeButton.removeAttribute("style");
+  }
+</script>
 
 </body>
 </html>

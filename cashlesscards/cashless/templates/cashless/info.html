@@ -1,62 +1,22 @@
 {% extends "base_generic.html" %}
 {% block content %}
-<style>
-#snackbar {
-    visibility: hidden;
-    margin-left: -125px;
-    background-color: #fff;
-    color: #333;
-    text-align: center;
-    border-radius: 2px;
-    border: 2px solid #cc0000;
-    padding: 16px;
-    position: fixed;
-    z-index: 1;
-    left: 65%;
-    bottom: 10px;
-    font-size: 14px;
-    box-shadow: 0 6px 8px 0 rgba(0,0,0,0.2);
-  }
-  
-  #snackbar.show {
-    visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    animation: fadein 0.5s;
-  }
-  
-  @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
-    to {bottom: 30px; opacity: 1;}
-  }
-  
-  @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
-  }
-  
-  @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;} 
-    to {bottom: 0; opacity: 0;}
-  }
-  
-  @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
-  }
-</style>
-
-
  <h2>Information</h2>
  <p>Welcome to CashlessCards, an awesome system developed by <em>Zak Warren</em>!</p>
  <p>Version {{ version }}</p>
   {% if not version_match %}
     <div id="snackbar">
+      <span class="close">&times;</span>
       <p>{{ update_message }}</p>
       <p>Visit the <a href="https://github.com/zakwarren/cashlesscards" target="_blank"> repo on Github</a> for more information.</p>
     </div>
     <script>
-      var x = document.getElementById("snackbar");
-      x.className = "show";
+      const snackbar = document.getElementById("snackbar");
+      snackbar.className = "show";
+
+      const span = document.getElementsByClassName("close")[0];
+      span.onclick = function() {
+        snackbar.style.display = "none";
+      }
     </script>
   {% endif %}
  <p>Background photo by <a href="https://unsplash.com/@gndclouds" target="_blank">William Felker</a> on <a href="https://unsplash.com/" target="_blank">Unsplash</a>.</p>

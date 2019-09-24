@@ -12,6 +12,7 @@ body {
 div,
 a,
 button,
+select,
 p {
     font-size: 1.1vw;
 }
@@ -29,16 +30,105 @@ h3 {
 }
 
 .top-nav__list {
+    font-size: 1.2vw
+}
+
+.content-button,
+.content-button__page {
+    font-size: 1vw;
+}
+
+@media (max-width: 1500px) {
+    div,
+    a,
+    button,
+    select,
+    p {
+        font-size: 2.2vw;
+    }
+
+    h1 {
+        font-size: 4vw;
+    }
+
+    h2 {
+        font-size: 3.2vw;
+    }
+
+    h3 {
+        font-size: 2.8vw;
+    }
+
+    .top-nav__list {
+        font-size: 2.4vw
+    }
+
+    .content-button,
+    .content-button__page {
+        font-size: 2vw;
+    }
+}
+
+@media (max-width: 800px) {
+    div,
+    a,
+    button,
+    select,
+    p {
+        font-size: 3.3vw;
+    }
+
+    h1 {
+        font-size: 6vw;
+    }
+
+    h2 {
+        font-size: 4.8vw;
+    }
+
+    h3 {
+        font-size: 4.2vw;
+    }
+
+    .top-nav__list {
+        font-size: 3.6vw
+    }
+
+    .content-button,
+    .content-button__page {
+        font-size: 3vw;
+    }
+}
+
+.top-nav__list {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: white;
-    font-size: 1.2vw;
     font-weight: bold;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+.top-nav__open-button,
+.top-nav__close-button {
+    padding: 0 2vw;
+    color: #aaaaaa;
+    font-size: 4vw;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+}
+
+.top-nav__close-button {
+    font-size: 6vw;
+}
+
+.top-nav__open-button:hover,
+.top-nav__close-button:hover {
+    color: #cc0000;
 }
 
 .top-nav__list-item a {
@@ -122,6 +212,31 @@ h3 {
         width: 90%;
         left: 5%;
     }
+
+    .top-nav__list-item {
+        display: none;
+        text-align: center;
+        padding: 2vw;
+    }
+
+    .top-nav__open-button {
+        display: block;
+    }
+
+    .top-nav__responsive {
+        padding: 0;
+        display: block;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .top-nav__buttons {
+        padding: 0 1vw;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
 }
 
 .sidebar-nav {
@@ -152,12 +267,30 @@ h3 {
     transform: translate(-50%, -50%);
 }
 
+@media (max-width: 1500px) {
+    .content-box {
+        width: 80%;
+    }
+}
+
+@media (max-width: 800px) {
+    .landing-img {
+        background-image: url("");
+    }
+
+    .content-box {
+        width: 100%;
+        top: 50%;
+        left: 0;
+        transform: translate(0, -50%);
+    }
+}
+
 .content-button,
 .content-button__page {
     background-color: #616161;
     border: none;
     color: white;
-    font-size: 1vw;
     font-weight: bold;
     text-align: center;
     text-decoration: none;
@@ -197,6 +330,62 @@ select {
     margin: 0.6vw 0;
     display: inline-block;
     border-radius: 0.4vw;
+}
+
+#snackbar {
+    visibility: hidden;
+    margin-left: -5vw;
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    border-radius: 0.2vw;
+    border: 0.2vw solid #cc0000;
+    padding: 1vw;
+    position: fixed;
+    z-index: 1;
+    left: 65%;
+    bottom: 1vw;
+    box-shadow: 0 6px 8px 0 rgba(0,0,0,0.2);
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 1vw; opacity: 1;}
+}
+
+ @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 1vw; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 1vw; opacity: 1;} 
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 1vw; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 3vw;
+    font-weight: bold;
+}
+  
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 table {

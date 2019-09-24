@@ -171,7 +171,7 @@ def deduct_cash_cashier(request, pk):
             # if amount to deduct is more than customer can afford
             else:
                 # generate contextual message and default form
-                message = True,
+                message = True
                 proposed_cash_value = Money(5, customsettings.CURRENCY)
                 form = DeductCashForm(initial={'cash_to_deduct': proposed_cash_value,})
 
@@ -462,7 +462,7 @@ class ActivityLog(PermissionRequiredMixin, generic.ListView):
     """Transaction log using the generic list view"""
     permission_required = 'cashless.view_finance'
     model = Transaction
-    paginate_by = 20
+    paginate_by = 10
     context_object_name = 'transaction_log'
     template_name = 'cashless/activity_log.html'
 

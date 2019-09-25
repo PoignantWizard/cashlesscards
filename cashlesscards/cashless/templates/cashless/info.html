@@ -3,21 +3,23 @@
  <h2>Information</h2>
  <p>Welcome to CashlessCards, an awesome system developed by <em>Zak Warren</em>!</p>
  <p>Version {{ version }}</p>
-  {% if not version_match %}
-    <div id="snackbar">
-      <span class="close">&times;</span>
-      <p>{{ update_message }}</p>
-      <p>Visit the <a href="https://github.com/zakwarren/cashlesscards" target="_blank"> repo on Github</a> for more information.</p>
-    </div>
-    <script>
-      const snackbar = document.getElementById("snackbar");
-      snackbar.className = "show";
+  {% if request.user.is_superuser %}
+    {% if not version_match %}
+      <div id="snackbar">
+        <span class="close">&times;</span>
+        <p>{{ update_message }}</p>
+        <p>Visit the <a href="https://github.com/zakwarren/cashlesscards" target="_blank"> repo on Github</a> for more information.</p>
+      </div>
+      <script>
+        const snackbar = document.getElementById("snackbar");
+        snackbar.className = "show";
 
-      const span = document.getElementsByClassName("close")[0];
-      span.onclick = function() {
-        snackbar.style.display = "none";
-      }
-    </script>
+        const span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+          snackbar.style.display = "none";
+        }
+      </script>
+    {% endif %}
   {% endif %}
  <p>Background photo by <a href="https://unsplash.com/@gndclouds" target="_blank">William Felker</a> on <a href="https://unsplash.com/" target="_blank">Unsplash</a>.</p>
  <br />

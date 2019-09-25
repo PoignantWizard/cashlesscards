@@ -259,7 +259,7 @@ h3 {
 }
 
 .content-box {
-    width: 60%;
+    width: 70%;
     padding: 0.2vw;
     background-color: white;
     color: black;
@@ -270,9 +270,15 @@ h3 {
     transform: translate(-50%, -50%);
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1700px) {
     .content-box {
         width: 80%;
+    }
+}
+
+@media (max-width: 1500px) {
+    .content-box {
+        width: 90%;
     }
 }
 

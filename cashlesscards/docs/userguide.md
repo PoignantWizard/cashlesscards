@@ -64,14 +64,14 @@ Now it's time to set up your credentials.py file. Navigate to cashlesscards/cash
 This is the same directory that contains settings.py. Create a new file called
 credentials.py. The file should contain the following:
 
-SECRET_KEY = [your secret key - generation of a new key described below]
-DATABASE = cashlesscards
-DB_USER = [your new username]
-DB_PASSWORD = [your new password]
-ALLOWED_HOSTS = [whichever allowed host you choose, such as: ['0.0.0.0']]
-SSL_ENABLED = [True (recommended) / False]
-STRIPE_PUBLISHABLE_KEY = [your stripe publishable key - more info below]
-STRIPE_SECRET_KEY = [your stripe secret key - more info below]
+- SECRET_KEY = [your secret key - generation of a new key described below]
+- DATABASE = cashlesscards
+- DB_USER = [your new username]
+- DB_PASSWORD = [your new password]
+- ALLOWED_HOSTS = [whichever allowed host you choose, such as: ['0.0.0.0']]
+- SSL_ENABLED = [True (recommended) / False]
+- STRIPE_PUBLISHABLE_KEY = [your stripe publishable key - more info below]
+- STRIPE_SECRET_KEY = [your stripe secret key - more info below]
 
 To create a new secret key. Enter "python3" into the command line. Once a python
 console has started, enter:
@@ -94,19 +94,19 @@ cashlesscards/cashlesscards/settings.py.
 Next navigate to cashlesscards/cashless and create the customsettings.py file,
 if it doesn't already exist. The file should contain the following:
 
-VERSION = [current system version]
-LANGUAGE_CODE = [your language code e.g. en-gb]
-TIME_ZONE = [your time zone e.g. GB]
-CURRENCY = [your default currency e.g. GBP]
-FROM_EMAIL = [the email you wish to send password reset tokens]
-TIMING = [the timings for vouchers that you want to include, options are: (
+- VERSION = [current system version]
+- LANGUAGE_CODE = [your language code e.g. en-gb]
+- TIME_ZONE = [your time zone e.g. GB]
+- CURRENCY = [your default currency e.g. GBP]
+- FROM_EMAIL = [the email you wish to send password reset tokens]
+- TIMING = [the timings for vouchers that you want to include, options are: (
         ("daily", "Daily"),
         ("weekly", "Weekly"),
         ("monthly", "Monthly"),
         ("yearly", "Yearly"),
     )]
-USE_STRIPE = [True / False]
-MINIMUM_CARD_PAYMENT_VALUE = [minimum value stripe will accept for your
+- USE_STRIPE = [True / False]
+- MINIMUM_CARD_PAYMENT_VALUE = [minimum value stripe will accept for your
 currency. You can set this higher for your purposes]
 
 Stripe has different mimimum values it accepts for each currency. You
@@ -290,7 +290,7 @@ click the search button to find that customer's account.
 On navigating to the account, the system will check if the customer is
 eligible for any vouchers. It will reset their voucher balance if it hasn't
 already done so within the application period. This action will be recorded in
-the transaction log. See the [activity log section](#Activity log) for more details.
+the transaction log. See the [activity log section](#Log) for more details.
 
 If no one is logged into the system (or you're logged in but have no
 permissions), all you'll be able to see is the customer's name, cash balance,
@@ -377,7 +377,7 @@ claimed today will remain until deducted.
 When you search for a customer using the seach form (see the [search section](#Search)
 for details), the system will check if the customer is eligible for any vouchers. It will
 reset their voucher balance if it hasn't already done so within the application period.
-This action will be recorded in the transaction log. See the [activity log section](#Activity log)
+This action will be recorded in the transaction log. See the [activity log section](#Log)
 for more details.
 
 ## Transactions
@@ -400,10 +400,10 @@ viewing a customer's account. These are:
     process occurs as soon as you press the "Submit" button.
 
 Both of these types of transactions are recorded in the transaction log for accounting
-and monitoring, particularly the use of vouchers. See the [activity log section](#Activity log)
+and monitoring, particularly the use of vouchers. See the [activity log section](#Log)
 for more details.
 
-## Activity log
+## Log
 
 If you have the "Can view transaction log" permission then a menu button will appear in
 the top navigation bar labelled "Activity log". Clicking this takes you to the

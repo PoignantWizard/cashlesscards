@@ -29,6 +29,27 @@ class IndexViewTest(TestCase):
 
 class InfoViewTest(TestCase):
     """Tests the info view"""
+    def setUp(self):
+        """Set up non-modified objects used by all test methods"""
+        test_voucher = Voucher.objects.create(
+            voucher_application="daily",
+            voucher_name="free breakfast",
+            voucher_value=Money(2, customsettings.CURRENCY),
+        )
+        test_customer = Customer.objects.create(
+            card_number=99,
+            first_name='John',
+            surname='Smith',
+        )
+        test_cash = Cash.objects.create(
+            customer_id=1,
+            cash_value=Money(2, customsettings.CURRENCY),
+            voucher_value=Money(5, customsettings.CURRENCY),
+        )
+        test_voucher.save()
+        test_customer.save()
+        test_cash.save()
+
     def test_view_url_exists_at_desired_location(self):
         """The URL exists in the expected location"""
         response = self.client.get('/cashless/info')

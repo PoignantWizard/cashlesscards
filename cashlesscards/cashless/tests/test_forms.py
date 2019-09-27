@@ -4,7 +4,8 @@ from djmoney.money import Money
 
 from cashless import customsettings
 from cashless.models import Voucher, VoucherLink, Customer
-from cashless.forms import AddCashForm, DeductCashForm, AddVoucherLinkForm
+from cashless.forms import AddCashForm, DeductCashForm, AddCashForStripePaymentForm
+from cashless.forms import AddVoucherLinkForm
 from cashless.forms import CreateNewVoucherForm, CreateNewCustomerForm
 
 
@@ -66,32 +67,32 @@ class AddCashForStripePaymentFormTest(TestCase):
     """Tests the add cash for stripe.js payment form"""
     def test_cash_to_add_field_label(self):
         """The field label of the cash to add field is as expected"""
-        form = AddCashForStripePaymentFormTest()
+        form = AddCashForStripePaymentForm()
         self.assertTrue(form.fields['cash_to_add'].label is None \
         or form.fields['cash_to_add'].label == 'cash to add')
 
     def test_cash_to_add_field_help_text(self):
         """The help text of the cash to add field is as expected"""
-        form = AddCashForm()
+        form = AddCashForStripePaymentForm()
         self.assertEqual(form.fields['cash_to_add'].help_text, \
         'Enter a value to add to account.')
 
     def test_cash_to_add_is_zero(self):
         """The form rejects a value of zero"""
         cash = Money(0, customsettings.CURRENCY)
-        form = AddCashForm(data={'cash_to_add': cash})
+        form = AddCashForStripePaymentForm(data={'cash_to_add': cash})
         self.assertFalse(form.is_valid())
 
     def test_cash_to_add_is_below_minimum(self):
         """The form rejects values below the minimum"""
         cash = Money(customsettings.MINIMUM_CARD_PAYMENT_VALUE, customsettings.CURRENCY)
-        form = AddCashForm(data={'cash_to_add': cash})
+        form = AddCashForStripePaymentForm(data={'cash_to_add': cash})
         self.assertFalse(form.is_valid())
 
     def test_cash_to_add_is_above_maximum(self):
         """The form rejects values below the minimum"""
         cash = Money(999999.99, customsettings.CURRENCY)
-        form = AddCashForm(data={'cash_to_add': cash})
+        form = AddCashForStripePaymentForm(data={'cash_to_add': cash})
         self.assertFalse(form.is_valid())
 
 

@@ -83,6 +83,8 @@ def setup_credentials(db, db_user, db_password):
         secret_key = input("Enter your stripe secret key: ")
     else:
         use_stripe = False
+        publishable_key = ""
+        secret_key = ""
 
     contents = '"""\n' \
         + "Credentials required by in the cashless cards project\n" \

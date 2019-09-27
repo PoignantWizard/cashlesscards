@@ -24,13 +24,13 @@ Detailed documentation is in the "docs" directory.
 ## Quick start
 
 To quickly test the system, use django's built in development server. See the
-[test section](#Test) for more details.
+[development section](#Development) for more details.
 
 To set up in a production environment, a more in-depth process is required.
 We've simplified this process with a deployment script. Go to
 [production](#Production) for details.
 
-### Test
+### Development
 
 1. Run `python3 manage.py migrate` to create the required models.
 
@@ -69,7 +69,7 @@ complete, it will ask you whether you want to start the webserver. If you enter
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct.
 
-This app is written in python 3.6 using the django framework version 2.0.7.  
+This app is written in python 3.6 using the django framework version 2.2.4.  
 
 ## Authors
 

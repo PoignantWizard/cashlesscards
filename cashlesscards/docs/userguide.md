@@ -5,7 +5,7 @@ system. Its a clean, lightweight web application designed to provide a
 cashless service in a "closed" environment, such as offices, clinics, and
 schools, using NFC capable ID cards or an otherwise unique customer number.
 
-## Set up
+## Setup
 
 We recommend copying the cashlesscards project folder to an ubuntu server for
 best results. It can also run from other linux or windows machines, however
@@ -13,6 +13,8 @@ we've not tested as thoroughly on these. As such, we haven't developed an
 automated deployment programme for these. If you wish to run from a windows
 machine or non-debian based linux machine, please see the Django documentation
 for deploying on your environment.
+
+### Deployment scripts
 
 The easiest way to set up and begin using the system on a debian based linux
 machine is to run installdependencies.py followed by deploy.py. You can do this
@@ -25,6 +27,112 @@ complete, it will ask you whether you want to start the webserver. If you enter
 
 If this has been successful, visit the admin page to setup your permission
 groups and users. See the [permissions section](#Permissions) for more details.
+
+### Manual deployment
+
+If you wish to manually deploy the system, then you'll need to follow the same
+steps as automated by the [deployment scripts](#Setup). These instructions walk
+you through the process for installing on an Ubuntu server. If you use a different
+version or different operating system, there may be extra steps involved. You can
+use Django documentation to help you with this.
+
+#### Install dependencies
+
+The first thing you need to do is install the dependencies. You can do this by
+entering the following commands:
+
+- sudo apt-get update
+- sudo apt-get install python3-pip python3-dev python-mysqldb mysql-server libmysqlclient-dev
+- pip3 install -r requirements.txt
+
+#### Configure database
+
+Following successful installation of the dependencies, configure your database.
+This system has been built and tested using MySQL, but Django supports a wide
+range of alternatives. To configure a MySQL instance, enter the following commands:
+
+- mysql_secure_installation
+- mysql -u [your root username] -p
+- CREATE DATABASE cashlesscards CHARACTER SET UTF8;
+- CREATE USER '[your new username]'@'localhost' IDENTIFIED BY '[your new password]';"
+- GRANT ALL PRIVILEGES ON cashlesscards.* TO '[your new username]'@'localhost';
+- FLUSH PRIVILEGES;
+
+#### Setup credentials
+
+Now it's time to set up your credentials.py file. Navigate to cashlesscards/cashlesscards.
+This is the same directory that contains settings.py. Create a new file called
+credentials.py. The file should contain the following:
+
+SECRET_KEY = [your secret key - generation of a new key described below]
+DATABASE = cashlesscards
+DB_USER = [your new username]
+DB_PASSWORD = [your new password]
+ALLOWED_HOSTS = [whichever allowed host you choose, such as: ['0.0.0.0']]
+SSL_ENABLED = [True (recommended) / False]
+
+To create a new secret key. Enter "python3" into the command line. Once a python
+console has started, enter:
+
+- from django.core.management import utils
+- key = utils.get_random_secret_key()
+- print(key)
+
+#### Deploy production settings file
+
+Rename cashlesscards/cashlesscards/settings_production.py to
+cashlesscards/cashlesscards/settings.py.
+
+#### Set custom settings
+
+Next navigate to cashlesscards/cashless and create the customsettings.py file,
+if it doesn't already exist. The file should contain the following:
+
+VERSION = [current system version]
+LANGUAGE_CODE = [your language code e.g. en-gb]
+TIME_ZONE = [your time zone e.g. GB]
+CURRENCY = [your default currency e.g. GBP]
+FROM_EMAIL = [the email you wish to send password reset tokens]
+TIMING = [the timings for vouchers that you want to include, options are: (
+        ("daily", "Daily"),
+        ("weekly", "Weekly"),
+        ("monthly", "Monthly"),
+        ("yearly", "Yearly"),
+    )]
+
+#### Deploy Django
+
+Navigate to the top level cashlesscards directory, which should contain manage.py.
+To migrate the models, connecting the system with the database, enter the
+following into the command line:
+
+- python3 manage.py makemigrations
+- python3 manage.py migrate
+
+To collect the static files, enter the following into the command line:
+
+- python3 manage.py collectstatic
+
+To create a superuser, which will handle user creation and management,
+enter the following into the command line:
+
+- python3 manage.py createsuperuser
+
+#### Launch site
+
+With successful completion of all the prior steps, you're ready to
+start the webserver. Navigate to the top level cashlesscards directory,
+which should contain start.sh. First set permissions on the start script
+by entering the following into the command line:
+
+- sudo chmod +x start.sh
+
+Next enter:
+
+- ./start.sh &
+
+Enter "./start.sh &" anytime you want to run the system, such as after a
+server update and reboot.
 
 ## Permissions
 

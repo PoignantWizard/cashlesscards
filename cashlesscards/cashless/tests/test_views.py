@@ -1,5 +1,3 @@
-import datetime
-
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User, Permission
@@ -7,7 +5,7 @@ from django.utils.timezone import now
 from djmoney.money import Money
 
 from cashless import customsettings
-from cashless.models import Voucher, Customer, Cash, VoucherLink, Transaction
+from cashless.models import Voucher, Customer, Cash, Transaction
 
 
 class IndexViewTest(TestCase):
@@ -152,6 +150,34 @@ class ActivityLogViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # Check that we pick up transaction data
         self.assertTrue('transaction_log' in response.context)
+
+
+class CustomerPaymentTest(TestCase):
+    """Tests the stripe card payment view"""
+
+    def setUp(self):
+        """Set up non-modified objects used by all test methods"""
+        # Create a customer with cash account
+        test_customer = Customer.objects.create(
+            card_number=99,
+            first_name='John',
+            surname='Smith',
+        )
+        test_cash = Cash.objects.create(
+            customer_id=1,
+            cash_value=Money(2, customsettings.CURRENCY),
+            voucher_value=Money(5, customsettings.CURRENCY),
+        )
+        test_customer.save()
+        test_cash.save()
+
+    def test_uses_correct_template(self):
+        """The view uses the expected template"""
+        test_customer = Customer.objects.get(id=1)
+        response = self.client.get(reverse('customer_payment', \
+            kwargs={'pk': test_customer.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cashless/customer_payment.html')
 
 
 class AddCashCashierViewTest(TestCase):

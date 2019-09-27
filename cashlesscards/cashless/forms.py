@@ -59,6 +59,41 @@ class DeductCashForm(forms.Form):
         return data
 
 
+class AddCashForStripePaymentForm(forms.Form):
+    """Generates the form for adding value to a customer's account via card payment"""
+    cash_to_add = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency=customsettings.CURRENCY,
+        help_text="Enter a value to add to account."
+    )
+
+    def clean_cash_to_add(self):
+        """cleans up user data before returning monetary value"""
+        data = self.cleaned_data['cash_to_add']
+
+        # Check value is not negative
+        if data < Money(0, customsettings.CURRENCY):
+            raise ValidationError(ugettext_lazy('Invalid value - value is negative'))
+
+        # Check value is not below minimum charge value
+        if data <= Money(customsettings.MINIMUM_CARD_PAYMENT_VALUE, customsettings.CURRENCY):
+            raise ValidationError(ugettext_lazy(
+                'Invalid value - value is below or equal to '
+                + str(Money(customsettings.MINIMUM_CARD_PAYMENT_VALUE, customsettings.CURRENCY))
+            ))
+
+        # Check value is not too high
+        if data >= Money(999999.99, customsettings.CURRENCY):
+            raise ValidationError(ugettext_lazy(
+                'Invalid value - value is above or equal to '
+                + str(Money(999999.99, customsettings.CURRENCY))
+            ))
+
+        # Return the cleaned data
+        return data
+
+
 class AddVoucherLinkForm(forms.Form):
     """Generates the form for adding a voucher to a customer's record"""
 
@@ -98,7 +133,7 @@ class AddVoucherLinkForm(forms.Form):
 class RemoveVoucherLinkForm(forms.Form):
     """Generates the form fro deleting a voucher from a customer's record"""
     delete_voucher = forms.TypedChoiceField(
-        coerce=lambda x: x =='True',
+        coerce=lambda x: x == 'True',
         choices=(
             (False, 'No'),
             (True, 'Yes')

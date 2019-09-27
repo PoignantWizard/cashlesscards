@@ -1,24 +1,28 @@
 import datetime
+import stripe
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Sum
 from django.views import generic
+from django.conf import settings
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.edit import UpdateView, DeleteView
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from djmoney.money import Money
 
 from . import customsettings
 from .models import Customer, Cash, Transaction, VoucherLink, Voucher
-from .forms import AddCashForm, DeductCashForm
+from .forms import AddCashForm, DeductCashForm, AddCashForStripePaymentForm
 from .forms import AddVoucherLinkForm, RemoveVoucherLinkForm
 from .forms import CreateNewVoucherForm, CreateNewCustomerForm
 from .voucherhandler import apply_voucher, debit_voucher
 from .updates import check_current_version
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def index(request):
@@ -94,6 +98,85 @@ class CustomerDetailView(generic.DetailView):
         cash_inst = Cash.objects.get(customer_id=pk)
         total_balance = cash_inst.cash_value + cash_inst.voucher_value
         return total_balance
+
+
+def customer_payment(request, pk):
+    """Get cash amount to add to account and handle card payment"""
+    cash_inst = get_object_or_404(Cash, customer_id=pk)
+    cash_inst.total = cash_inst.cash_value + cash_inst.voucher_value
+
+    if request.method == 'POST':
+        form = AddCashForStripePaymentForm(request.POST)
+
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            clean_data = form.cleaned_data['cash_to_add']
+            stripe_amount = int(clean_data.amount * 100)
+
+            # send stripe.js card payment (avoiding storing any card details)
+            charge = stripe.Charge.create(
+                amount=stripe_amount,
+                currency=customsettings.CURRENCY,
+                description='Add cash to account',
+                source=request.POST['stripeToken']
+            )
+
+            if charge['status'] == 'succeeded':
+                cash_inst.cash_value += clean_data
+                # log transaction data
+                credit = Transaction(
+                    customer_id=pk,
+                    transaction_type="stripe",
+                    transaction_value=clean_data,
+                    )
+                # write it to the model cash_value field
+                cash_inst.save()
+                credit.save()
+
+            # render success confirmation page
+            total_balance = cash_inst.cash_value + cash_inst.voucher_value
+            return render(
+                request,
+                'cashless/customer_charged.html',
+                {
+                    'key': settings.STRIPE_PUBLISHABLE_KEY,
+                    'cash_amount': clean_data,
+                    'stripe_amount': stripe_amount,
+                    'cashinst': cash_inst,
+                    'total': total_balance,
+                }
+            )
+
+    # if this is a GET (or any other method) create the default form.
+    else:
+        proposed_cash_value = Money(5, customsettings.CURRENCY)
+        form = AddCashForStripePaymentForm(
+            initial={'cash_to_add': proposed_cash_value,}
+        )
+    return render(
+        request,
+        'cashless/customer_payment.html',
+        {
+            'form': form,
+            'cashinst': cash_inst,
+            'key': settings.STRIPE_PUBLISHABLE_KEY,
+        }
+    )
+
+
+def customer_charged(request, pk):
+    """Return confirmation of stripe.js payment to customer"""
+    return render(
+        request,
+        'cashless/customer_charged.html',
+        {
+            'key': settings.STRIPE_PUBLISHABLE_KEY,
+            'cash_amount': request.POST['cash_amount'],
+            'stripe_amount': request.POST['stripe_amount'],
+            'cashinst': request.POST['cash_inst'],
+            'total': request.POST['total'],
+        }
+    )
 
 
 @permission_required('cashless.can_transact')

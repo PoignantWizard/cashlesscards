@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+{% block content %}
+
+    <h1>Setup card payment with amount to add to account</h1>
+    
+    <div class="content-inner">
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+            {{ form }}
+            </table>
+            <br />
+            <p>
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="{{ key }}"
+                    data-description="Add cash to account"
+                    data-amount="{{ stripe_amount }}"
+                    data-locale="auto"
+                    data-currency="{{ currency }}" >
+                </script>
+                <input class="content-button" type="submit" value="Pay with card" />
+                <style>
+                    .stripe-button-el {
+                        display: none;
+                    }
+                </style>
+            </p>
+        </form>
+    </div>
+    <p><a href="{% url 'index' %}"><button class="content-button" target="_blank">Search with another card</button></a></p>
+
+{% endblock %}

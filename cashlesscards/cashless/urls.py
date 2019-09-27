@@ -10,7 +10,7 @@ urlpatterns = [
     # voucher handling
     path('voucher/', views.VoucherListView.as_view(), name='voucher_list'),
     path('voucher/new', views.create_new_voucher, name='create_new_voucher'),
-    path('voucher/<int:pk>',views.VoucherDetailView.as_view(), name='voucher_detail'),
+    path('voucher/<int:pk>', views.VoucherDetailView.as_view(), name='voucher_detail'),
     path('voucher/<int:pk>/update', views.VoucherUpdate.as_view(), name='update_voucher'),
     path('voucher/<int:pk>/delete', views.VoucherDelete.as_view(), name='delete_voucher'),
     # customer handling
@@ -25,9 +25,12 @@ urlpatterns = [
         views.remove_voucher_link,
         name='remove_voucher_link'
     ),
-    # transactions
+    # cash transactions
     path('customer/<int:pk>/addcash/', views.add_cash_cashier, name='add_cash_cashier'),
     path('customer/<int:pk>/deductcash/', views.deduct_cash_cashier, name='deduct_cash_cashier'),
+    # card transactions (stripe)
+    path('customer/<int:pk>/payment/', views.customer_payment, name='customer_payment'),
+    path('customer/<int:pk>/charged/', views.customer_charged, name='customer_charged'),
     # logs and reports
     path('log', views.ActivityLog.as_view(), name='activity_log'),
     path('log/activitylog.csv', views.ActivityLogToCsv.as_view(), name='activity_log_csv'),

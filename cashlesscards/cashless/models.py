@@ -125,9 +125,11 @@ class Transaction(models.Model):
 
     credit = "credit"
     debit = "debit"
+    stripe = "stripe"
     transact_choices = (
         (credit, "Credit"),
         (debit, "Debit"),
+        (stripe, "Stripe Credit"),
     )
 
     transaction_type = models.CharField(

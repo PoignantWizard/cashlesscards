@@ -31,7 +31,10 @@
               </a>
           {% endif %}
             </p>
-            <p><a href="/"><button class="content-button" target="_blank">Search with another card</button></a></p>
+            <p>
+              <a href="{% url 'customer_payment' customer.pk %}"><button class="content-button" target="_blank">Make card payment</button></a>
+              <a href="/"><button class="content-button" target="_blank">Search with another card</button></a>
+            </p>
       </div>
 
 

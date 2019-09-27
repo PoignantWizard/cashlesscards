@@ -29,3 +29,8 @@ TIMING = (
     ("monthly", "Monthly"),
     ("yearly", "Yearly"),
 )
+
+# minimum value accepted by stripe.js card payment
+# see https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts
+# for details of absolute stripe.js minimums
+MINIMUM_CARD_PAYMENT_VALUE = 0.3

@@ -179,7 +179,7 @@ class TransactionModelTest(TestCase):
         self.assertEqual(max_digits, 14)
 
     def test_transaction_status(self):
-        """The transaction type is credit or debit"""
+        """The transaction type is credit or debit or stripe.js payment"""
         balance = Transaction.objects.get(id=1)
-        transact_choices = ['credit', 'debit']
+        transact_choices = ['credit', 'debit', 'stripe']
         self.assertIn(balance.transaction_type, transact_choices)

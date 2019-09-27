@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Card payment successful</h1>
+    <p>Thanks, you successfully added <strong>{{ cash_amount }}</strong> to your account!</p>
+    <br />
+    <h3>Customer: {{cashinst.customer.first_name}} {{cashinst.customer.surname}}</h3>
+    <p>Voucher value: {{ cashinst.voucher_value }}
+    <p>Current cash held on system: {{cashinst.cash_value}}</p>
+    <p><strong>Total balance: {{ total }}</strong></p>
+
+    <p><a href="{% url 'index' %}"><button class="content-button" target="_blank">Search with another card</button></a></p>
+
+{% endblock %}

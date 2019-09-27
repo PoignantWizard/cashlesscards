@@ -5,6 +5,16 @@ import getpass
 
 SYSTEM_VERSION = 1.0
 
+STRIPE_WEBSITE = "https://stripe.com"
+STRIPE_CURRENCIES = "https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts"
+
+DEFAULT_DATABASE = "cashlesscards"
+DEFAULT_ALLOWED_HOSTS = "'*'"
+DEFAULT_LANGUAGE = "en-gb"
+DEFAULT_TIMEZONE = "GB"
+DEFAULT_CURRENCY = "GBP"
+DEFAULT_MIN_CHARGE = 0.3
+
 
 def configure_mysql():
     """Set up MySQL database"""
@@ -12,7 +22,7 @@ def configure_mysql():
 
     # get credentials
     root_password = getpass.getpass("Enter root password for MySQL: ")
-    db = "cashlesscards"
+    db = DEFAULT_DATABASE
     db_user = input("Enter new database username: ")
     db_password = getpass.getpass("Enter password: ")
 
@@ -59,7 +69,20 @@ def setup_credentials(db, db_user, db_password):
         else:
             break
     if hosts == []:
-        hosts = ['*']
+        hosts = [DEFAULT_ALLOWED_HOSTS]
+
+    print("If you want to allow customers to make credit and debit", end=" ")
+    print("card payments to top up their account, you'll need", end=" ")
+    print("stripe API keys. Visit " + STRIPE_WEBSITE + " to create an account.")
+    stripe = input(
+        "Do you want to use stripe and enable credit and debit card payments? (y/n) "
+    )
+    if stripe == "yes" or stripe == "Yes" or stripe == "y" or stripe == "Y":
+        use_stripe = True
+        publishable_key = input("Enter your stripe publishable key: ")
+        secret_key = input("Enter your stripe secret key: ")
+    else:
+        use_stripe = False
 
     contents = '"""\n' \
         + "Credentials required by in the cashless cards project\n" \
@@ -74,11 +97,16 @@ def setup_credentials(db, db_user, db_password):
         + "# allowed hosts\n" \
         + "ALLOWED_HOSTS = " + str(hosts) + "\n\n\n" \
         + "# site security\n" \
-        + "SSL_ENABLED = " + str(ssl) + "\n"
+        + "SSL_ENABLED = " + str(ssl) + "\n\n\n" \
+        + "# stripe checkout keys\n" \
+        + "STRIPE_PUBLISHABLE_KEY = '" + publishable_key + "'\n" \
+        + "STRIPE_SECRET_KEY = '" + secret_key + "'\n"
 
     fname = "cashlesscards/credentials.py"
     with open(fname, 'w') as f:
         f.write(contents)
+
+    return use_stripe
 
 
 def deploy_production():
@@ -89,12 +117,34 @@ def deploy_production():
         os.rename(set_old_prod, set_prod)
 
 
-def setup_custom_settings():
+def setup_custom_settings(use_stripe):
     """Setup custom settings"""
     lang = input("Enter your language code (e.g. en-gb): ")
     time = input("Enter your time zone (e.g. GB): ")
     currency = input("Enter your currency code (e.g. GBP): ")
+    if lang == "":
+        lang = DEFAULT_LANGUAGE
+    if time == "":
+        time = DEFAULT_TIMEZONE
+    if currency == "":
+        currency = DEFAULT_CURRENCY
+
     email = input("Enter the email address for sending password resets: ")
+
+    if use_stripe:
+        print("Stripe has a minimum value it'll accept for each currency.", end=" ")
+        print("Visit " + STRIPE_CURRENCIES, end=" ")
+        print("to find out what your currency's minimum is. You may want", end=" ")
+        print("set a higher value. Use decimal notation, e.g. 0.3 for 30p and 3 for £3.")
+        min_value = input("Enter the minimum value you'll accept: ")
+        try:
+            if min_value == int(0) or min_value == "":
+                min_value = DEFAULT_MIN_CHARGE
+        except:
+            min_value = DEFAULT_MIN_CHARGE
+    else:
+        min_value = ""
+
 
     contents = '"""\n' \
         + "Custom settings for cashless app in the cashless cards project\n" \
@@ -116,7 +166,13 @@ def setup_custom_settings():
         + '    ("weekly", "Weekly"),\n' \
         + '    ("monthly", "Monthly"),\n' \
         + '    ("yearly", "Yearly"),\n' \
-        + ")\n"
+        + ")\n\n\n" \
+        + "# enable stripe.js integration\n" \
+        + "USE_STRIPE = " + str(use_stripe) + "\n\n\n" \
+        + "# minimum value accepted by stripe.js card payment\n" \
+        + "# see https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts\n" \
+        + "# for details of absolute stripe.js minimums\n" \
+        + "MINIMUM_CARD_PAYMENT_VALUE = " + str(0.3)
 
     fname = "cashless/customsettings.py"
     with open(fname, 'w') as f:
@@ -170,9 +226,9 @@ def launch_site():
 def main():
     """Entry point to program"""
     db, db_user, db_password = configure_mysql()
-    setup_credentials(db, db_user, db_password)
+    use_stripe = setup_credentials(db, db_user, db_password)
     deploy_production()
-    setup_custom_settings()
+    setup_custom_settings(use_stripe)
     django_deploy()
     # conclusion
     print("Deployment complete!")

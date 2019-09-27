@@ -6,7 +6,7 @@ def get_packages():
     """Get required packages"""
     os.system("sudo apt-get update")
     packages = "sudo apt-get install " \
-            + "python3-pip python3-dev python-mysqldb mysql-server libmysqlclient-dev "
+            + "python3-pip python3-dev python-mysqldb mysql-server libmysqlclient-dev"
     os.system(packages)
 
 

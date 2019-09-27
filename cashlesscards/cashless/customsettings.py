@@ -3,7 +3,7 @@ Custom settings for cashless app in the cashless cards project
 """
 
 # current version of the system
-VERSION = 1.0
+VERSION = 1.1
 
 
 # language and timezone settings

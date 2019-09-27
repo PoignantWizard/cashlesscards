@@ -24,6 +24,9 @@ from .updates import check_current_version
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+DEFAULT_VALUE = 5
+DEFAULT_PAGINATION = 10
+
 
 def index(request):
     """Homepage for the cashless card system"""
@@ -151,7 +154,7 @@ def customer_payment(request, pk):
 
     # if this is a GET (or any other method) create the default form.
     else:
-        proposed_cash_value = Money(5, customsettings.CURRENCY)
+        proposed_cash_value = Money(DEFAULT_VALUE, customsettings.CURRENCY)
         form = AddCashForStripePaymentForm(
             initial={'cash_to_add': proposed_cash_value,}
         )
@@ -215,7 +218,7 @@ def add_cash_cashier(request, pk):
 
     # if this is a GET (or any other method) create the default form.
     else:
-        proposed_cash_value = Money(5, customsettings.CURRENCY)
+        proposed_cash_value = Money(DEFAULT_VALUE, customsettings.CURRENCY)
         form = AddCashForm(initial={'cash_to_add': proposed_cash_value,})
 
     return render(request, 'cashless/cash_transactions.html', {'form':form, 'cashinst':cash_inst})
@@ -257,7 +260,7 @@ def deduct_cash_cashier(request, pk):
             else:
                 # generate contextual message and default form
                 message = True
-                proposed_cash_value = Money(5, customsettings.CURRENCY)
+                proposed_cash_value = Money(DEFAULT_VALUE, customsettings.CURRENCY)
                 form = DeductCashForm(initial={'cash_to_deduct': proposed_cash_value,})
 
                 # Render the HTML template with the context variable
@@ -274,7 +277,7 @@ def deduct_cash_cashier(request, pk):
 
     # if this is a GET (or any other method) create the default form.
     else:
-        proposed_cash_value = Money(5, customsettings.CURRENCY)
+        proposed_cash_value = Money(DEFAULT_VALUE, customsettings.CURRENCY)
         form = DeductCashForm(initial={'cash_to_deduct': proposed_cash_value,})
 
     return render(request, 'cashless/cash_transactions.html', {'form':form, 'cashinst':cash_inst})
@@ -399,7 +402,7 @@ def create_new_voucher(request):
     else:
         proposed_application = "daily"
         proposed_name = ""
-        proposed_value = Money(5, customsettings.CURRENCY)
+        proposed_value = Money(DEFAULT_VALUE, customsettings.CURRENCY)
         form = CreateNewVoucherForm(
             initial={
                 'application': proposed_application,
@@ -418,7 +421,7 @@ class VoucherListView(PermissionRequiredMixin, generic.ListView):
     """A list of all vouchers using the generic list view"""
     permission_required = 'cashless.can_add_vouchers'
     model = Voucher
-    paginate_by = 20
+    paginate_by = DEFAULT_PAGINATION
 
 
 class VoucherDetailView(PermissionRequiredMixin, generic.DetailView):
@@ -520,7 +523,7 @@ class CustomerListView(PermissionRequiredMixin, generic.ListView):
     """A list of all customers using the generic list view"""
     permission_required = 'cashless.can_add_customers'
     model = Customer
-    paginate_by = 20
+    paginate_by = DEFAULT_PAGINATION
 
 
 class CustomerUpdate(PermissionRequiredMixin, UpdateView):
@@ -547,7 +550,7 @@ class ActivityLog(PermissionRequiredMixin, generic.ListView):
     """Transaction log using the generic list view"""
     permission_required = 'cashless.view_finance'
     model = Transaction
-    paginate_by = 10
+    paginate_by = DEFAULT_PAGINATION
     context_object_name = 'transaction_log'
     template_name = 'cashless/activity_log.html'
 

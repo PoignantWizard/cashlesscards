@@ -3,7 +3,7 @@ import os
 import getpass
 
 
-SYSTEM_VERSION = 1.0
+SYSTEM_VERSION = 1.1
 
 STRIPE_WEBSITE = "https://stripe.com"
 STRIPE_CURRENCIES = "https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts"

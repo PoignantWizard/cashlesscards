@@ -8,8 +8,14 @@ transactions using NFC capable ID cards. After creating an account for a
 customer (including their card number), you can credit their account.
 Enter the customer's card number into the search box on the home page
 using a USB card reader. This will redirect you to their account. You can
-then debit their account when they purchase items or services within your
-closed environment.
+then credit their account when they hand cash to a cashier, or debit their
+account when they purchase items or services within your closed environment.
+
+The system has stripe.js integrated to allow credit and debit card payments.
+This allows customers to credit their account directly using stripe's
+secure payment interface. You'll need a stripe account to make use of this
+feature. It can be switched off in the settings if you decide not to make
+use of it.
 
 Cashless cards is also equipped with a powerful voucher service. Set the
 timing on a voucher to specify how often the value is credited to an

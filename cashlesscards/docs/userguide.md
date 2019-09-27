@@ -70,6 +70,8 @@ DB_USER = [your new username]
 DB_PASSWORD = [your new password]
 ALLOWED_HOSTS = [whichever allowed host you choose, such as: ['0.0.0.0']]
 SSL_ENABLED = [True (recommended) / False]
+STRIPE_PUBLISHABLE_KEY = [your stripe publishable key - more info below]
+STRIPE_SECRET_KEY = [your stripe secret key - more info below]
 
 To create a new secret key. Enter "python3" into the command line. Once a python
 console has started, enter:
@@ -77,6 +79,10 @@ console has started, enter:
 - from django.core.management import utils
 - key = utils.get_random_secret_key()
 - print(key)
+
+If you want to allow customers to make credit and debit card payments to top up
+their account, you'll need stripe API keys. Visit the
+[stripe website]("https://stripe.com") to create an account.
 
 #### Deploy production settings file
 
@@ -99,6 +105,13 @@ TIMING = [the timings for vouchers that you want to include, options are: (
         ("monthly", "Monthly"),
         ("yearly", "Yearly"),
     )]
+USE_STRIPE = [True / False]
+MINIMUM_CARD_PAYMENT_VALUE = [minimum value stripe will accept for your
+currency. You can set this higher for your purposes]
+
+Stripe has different mimimum values it accepts for each currency. You
+can find these out on the relevant
+[stripe documentation page](https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts)
 
 #### Deploy Django
 
@@ -133,6 +146,24 @@ Next enter:
 
 Enter "./start.sh &" anytime you want to run the system, such as after a
 server update and reboot.
+
+## Stripe card payments
+
+The system has stripe.js integrated to allow customers to top up their
+Cashless Cards account with a credit or debit card. This can be switched
+on or off during deployment or manually in the customsettings.py file.
+You'll need to create a stripe account to make use of this feature. More
+information can be found on the [stripe website]("https://stripe.com").
+
+Cashless Cards doesn't store any card information. Stripe.js handles all
+the necessary payment processes and meets all requisite laws and regulations.
+Cashless Cards allows the customer to choose an amount to add to their account
+(between the technical minimum and maximum values, see
+[stripe documentation page](https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts)
+for details) then pay for it directly using stripe's interface.
+
+On receiving notification from stripe of a successful transaction, the system
+will update the customer's cash account and the transaction log.
 
 ## Permissions
 

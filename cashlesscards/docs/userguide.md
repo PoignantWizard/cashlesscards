@@ -147,6 +147,11 @@ Next enter:
 Enter "./start.sh &" anytime you want to run the system, such as after a
 server update and reboot.
 
+If gunicorn has trouble connecting to port 8000, and you're certain that
+another service isn't using that port, enter "sudo fuser -k 8000/tcp"
+to clear it. Then try running the start script again. Otherwise, you
+could edit start.sh to change the port number it uses.
+
 ## Stripe card payments
 
 The system has stripe.js integrated to allow customers to top up their

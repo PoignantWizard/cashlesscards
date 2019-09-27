@@ -30,6 +30,9 @@ TIMING = (
     ("yearly", "Yearly"),
 )
 
+# enable stripe.js integration\n" \
+USE_STRIPE = True
+
 # minimum value accepted by stripe.js card payment
 # see https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts
 # for details of absolute stripe.js minimums

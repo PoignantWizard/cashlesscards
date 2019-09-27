@@ -76,6 +76,7 @@ def search(request):
             apply_voucher(results)
             cash_inst = Cash.objects.get(customer_id=results.pk)
             results.total_balance = cash_inst.cash_value + cash_inst.voucher_value
+            results.use_stripe = customsettings.USE_STRIPE
     except:
         results = None
     return render(request, 'cashless/results.html', {"results": results,})
@@ -90,6 +91,7 @@ class CustomerDetailView(generic.DetailView):
         context = super(CustomerDetailView, self).get_context_data(**kwargs)
         total_balance = self.get_total_balance()
         context['total_balance'] = total_balance
+        context['use_stripe'] = customsettings.USE_STRIPE
         return context
 
     def get_total_balance(self):

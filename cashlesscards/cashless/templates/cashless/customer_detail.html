@@ -32,7 +32,9 @@
           {% endif %}
             </p>
             <p>
-              <a href="{% url 'customer_payment' customer.pk %}"><button class="content-button" target="_blank">Make card payment</button></a>
+              {% if use_stripe %}
+                <a href="{% url 'customer_payment' customer.pk %}"><button class="content-button" target="_blank">Make card payment</button></a>
+              {% endif %}
               <a href="/"><button class="content-button" target="_blank">Search with another card</button></a>
             </p>
       </div>
